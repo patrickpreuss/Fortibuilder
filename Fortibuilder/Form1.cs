@@ -11,11 +11,6 @@ using System.Threading.Tasks;
 
 namespace Fortibuilder
 {
-    public class DownloadStringTaskAsyncExProgress
-    {
-        public int ProgressPercentage { get; set; }
-        public string Text { get; set; }
-    }
 
     public partial class Form1 : Form
     {
@@ -781,4 +776,11 @@ namespace Fortibuilder
       */
 
     }
+
+    public class DownloadStringTaskAsyncExProgress
+    {
+        public int ProgressPercentage { get; set; }
+        public string Text { get; set; }
+    }
+
 }
