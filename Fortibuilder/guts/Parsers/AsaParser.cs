@@ -23,6 +23,7 @@ namespace Fortibuilder.guts.Parsers
             sip = 5060 - 5061
             //echo = icmp
         };
+
         private readonly string _filename;
 
         private bool _check1 = false,
@@ -126,7 +127,7 @@ namespace Fortibuilder.guts.Parsers
                                         mask = null;
                                         description = null;
                                         objectsParsedTotal++;
-                                        goto Outer;
+                                        break;
                                 }
                                 switch (isaservice)
                                 {
@@ -143,25 +144,23 @@ namespace Fortibuilder.guts.Parsers
                                         objecttype = null;
                                         protocoltype = null;
                                         portrange = null;
-                                        goto Outer;
-                                }
-
-                            Outer:
-                                objecttype = results[1];
-                                switch (objecttype)
-                                {
-                                    case "network":
-                                        objectname = results[2];
-                                        isanobject = true;
-                                        break;
-
-                                    case "service":
-                                        objectname = results[2];
-                                        isaservice = true;
                                         break;
                                 }
 
+                        objecttype = results[1];
 
+                        switch (objecttype)
+                        {
+                            case "network":
+                                objectname = results[2];
+                                isanobject = true;
+                                break;
+
+                            case "service":
+                                objectname = results[2];
+                                isaservice = true;
+                                break;
+                        }
                                 break;
                             case "object-group":
                                 switch (isaservice)
@@ -178,9 +177,9 @@ namespace Fortibuilder.guts.Parsers
                                         objecttype = null;
                                         protocoltype = null;
                                         portrange = null;
-                                        goto Outer;
                                         break;
                                 }
+
                                 switch (isanobject)
                                 {
                                     case true:
@@ -201,6 +200,7 @@ namespace Fortibuilder.guts.Parsers
                                         objectsParsedTotal++;
                                         break;
                                 }
+
                                 switch (isingroup)
                                 {
                                     case true:
@@ -216,7 +216,7 @@ namespace Fortibuilder.guts.Parsers
                                                 objectGroupTotal++;
                                                 break;
                                             case "protocol":
-                                                string[] addme3 = { objectgroupname, objectname, description };
+                                                string[] addme3 = { objectgroupname, groupmembers, description };
                                                 scripter.WriteServiceObjectGroup(addme3);
                                                 objectgroupname = null;
                                                 objectname = null;
@@ -228,9 +228,9 @@ namespace Fortibuilder.guts.Parsers
                                         }
                                         break;
                                 }
-
                                 isingroup = true;
                                 objectgrouptype = results[1];
+                                objectgroupname = results[2];
                                 break;
 
                             default:
@@ -238,7 +238,7 @@ namespace Fortibuilder.guts.Parsers
                                 //TODO break out of unknown types
                                 break;
                         }
-
+                    Outer:
                         if (results.Count() > 1)
                         {
                             switch (results[1])
@@ -335,7 +335,9 @@ namespace Fortibuilder.guts.Parsers
                                     {
                                         case true:
                                             objectgroupname = results[2];
-                                            protocoltype = results[3];
+                                            if (results.Count() < 2) { 
+                                                protocoltype = results[3];
+                                            }
                                             break;
                                     }
                                     break;
@@ -371,11 +373,9 @@ namespace Fortibuilder.guts.Parsers
                             case true:
                                 var per = index / progress;
                                 var counters = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, per, consoleoutput);
-                               
                                 //Form1.ReportProgress(per, String.Format("{0},{1}", index, counters));
                                 //ReportProgress this.
                                 //writetoconsole = false;
-                                
                                 break;
                                 //return String.Format("{0},{1}", index, counters);
                             case false:
@@ -384,7 +384,6 @@ namespace Fortibuilder.guts.Parsers
                                 //ProgressChangedEventArgs eventArgs = 1;
                                 break;
                                 //return counters2;
-
                         }
                         /*    Omit Everything above to debug line to peek at config file.
                          * 
@@ -486,7 +485,6 @@ namespace Fortibuilder.guts.Parsers
                 return true;
             }
             return false;
-
         }
 
         private void Dispose()

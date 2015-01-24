@@ -162,7 +162,6 @@ namespace Fortibuilder.guts
             string objectmemberoutput = null;
             
             //parse object names passed.
-            //var description =
             File.AppendAllText(_filename, String.Format("{0}{1} \"{2}\"\r\n", spacer, "edit", objectgroupname));
             //TODO set uuid if needed. i don't think its neccessary though.
             switch (input.Count() > 3)
@@ -189,14 +188,14 @@ namespace Fortibuilder.guts
 
         public void WriteServiceObjectGroup(string[] input)
         {
-
             //NOTE TO SELF. The only real thing that belongs in this is members and comments for the groups.
             _filename = "service_groups.txt";
             var spacer = "    ";
             var objectgroupname = input[0];
-            var servicenames = input[1];
-            var protocoltypes = input[2];
-            string portrangeoutput = null;
+            var groupmembers = input[1];
+
+            //var protocoltypes = input[2];
+            //string portrangeoutput = null;
 
             File.AppendAllText(_filename, String.Format("{0}{1} \"{2}\"\r\n", spacer, "edit", objectgroupname));
             switch (input.Count() > 3)
@@ -210,24 +209,15 @@ namespace Fortibuilder.guts
                     File.AppendAllText(_filename, String.Format("{0}{0}{1} \"{2}\"\r\n", spacer, "set comment ", description.TrimEnd(' ')));
                     break;
             }
-            
-            switch (protocoltypes.Contains('-'))
+
+            string groupmembers2 = null;
+            foreach (var groupmember in groupmembers)
             {
-                case true:
-                    string[] protocoltypes1 = protocoltypes.Split('-');
-                        foreach (var s in protocoltypes1)
-                        {
-                            protocoltypes += String.Format("{0}{1}", s, ",");
-                        }
-                    break;
-            }
-            
-            foreach (var ports in input[3].Split('|'))
-            {
-                portrangeoutput += String.Format("\"{0}\"", ports);
+                groupmembers2 += String.Format("\"{0}\"",groupmember);
             }
 
-            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set member", portrangeoutput));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set member", groupmembers2));
+            File.AppendAllText(_filename, String.Format("{0}{1}\r\n", spacer, "next"));
         }
 
         public void WriteStaticRoute(string networkinterface, string route, string nexthop, int metric, int routenumber)

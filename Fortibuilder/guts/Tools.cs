@@ -32,11 +32,14 @@ namespace Fortibuilder.guts
             {
                 return true;
             }
-            else
-            {
                 return false;
-            }
         }
+
+        public static string IpRange(string ip, string subnet)
+        {
+            return ip;
+        }
+
 
         public static bool Isanint(string input)
         {

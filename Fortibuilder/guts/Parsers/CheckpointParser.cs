@@ -23,6 +23,7 @@ namespace Fortibuilder.guts.Parsers
             string goway = "goaway";
             return goway;
         }
+
         private static int CountLinesInFile(string f)
         {
             var count = 0;
