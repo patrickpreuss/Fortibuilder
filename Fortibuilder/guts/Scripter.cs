@@ -126,7 +126,7 @@ namespace Fortibuilder.guts
                 case "network":
                     File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set type", objecttype));
                     File.AppendAllText(_filename, String.Format("{0}{0}{1} {2} {3}\r\n", spacer, "set subnet", ip, smask));
-                break;
+                    break;
                 case "range":
                     File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set type", objecttype));
                     File.AppendAllText(_filename, String.Format("{0}{0}{1}{2}",spacer,"set end-ip"));
@@ -134,7 +134,6 @@ namespace Fortibuilder.guts
                     break;
             }
                
-
             switch (input.Count()>=5)
             {
                 case true:
@@ -158,13 +157,13 @@ namespace Fortibuilder.guts
 
             var spacer= "    "; 
             var objectgroupname = input[0];
-            var objectmembers=input[1].Split('|');
+            var objectmembers=input[1].Split(',');
             string objectmemberoutput = null;
             
             //parse object names passed.
             File.AppendAllText(_filename, String.Format("{0}{1} \"{2}\"\r\n", spacer, "edit", objectgroupname));
             //TODO set uuid if needed. i don't think its neccessary though.
-            switch (input.Count() > 3)
+            switch (input.Count() > 2)
             {
                 case true:
                     string description = null;
@@ -172,19 +171,70 @@ namespace Fortibuilder.guts
                     {
                         description += String.Format("{0} ", input[i]);
                     }
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1} \"{2}\"\r\n",spacer,"set comment ", description.TrimEnd(' ')));
+                    switch (description)
+                    {
+                        case " ":
+                            break;
+                        default:
+                            File.AppendAllText(_filename, String.Format("{0}{0}{1} \"{2}\"\r\n", spacer, "set comment ", description.TrimEnd(' ')));
+                            break;
+                    }
                     break;
             }
 
             foreach (var name in objectmembers)
             {
-                objectmemberoutput += String.Format("\"{0}\" ", name);
+                if (name == "")
+                {
+                }
+                else 
+                { 
+                    objectmemberoutput += String.Format("\"{0}\" ", name);
+                }
             }
 
             File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set member ", objectmemberoutput));
             File.AppendAllText(_filename, String.Format("{0}{0}{1}\r\n", spacer, "next"));
         }
 
+        public void WriteServiceObject(string[] input)
+        {
+            _filename = "services.txt";
+            var servicename = input[0];
+            var catagory = input[1];
+            var protocol = input[2];
+            var portrange = input[3].Replace('|',',');
+
+            //var editcount = 1;
+            var spacer = "    ";
+
+            File.AppendAllText(_filename, String.Format("{0}{1} {2}\r\n", spacer, "edit", servicename));
+            //File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer,"set category",catagory));
+            if (protocol.Contains("ICMP"))
+            {
+                var protocolsused = protocol.Split('|');
+                for (var i = 0; i < protocolsused.Count(); i++)
+                {
+                    var icmptypecode = protocolsused[i].Split('\\');
+                    File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}", spacer, "set protocol", icmptypecode[0]));
+                    File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}", spacer, "set icmptype", icmptypecode[1]));
+                    File.AppendAllText(_filename, String.Format("{0}{0}{1}", spacer, "unset icmpcode"));
+                }
+            }
+
+            else
+            {
+                var protocolsused = protocol.Split('|');
+                //string portout = null;
+                for (var i = 0; i < protocolsused.Count() - 1; i++)
+                {
+                        //portout += String.Format("{0}{1}", portrange, ',');
+                        File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}{3} {4}\r\n", spacer, "set", protocolsused[i], "-portrange", portrange.TrimEnd(',')));
+                
+                }
+            }
+            File.AppendAllText(_filename, String.Format("{0}{1}\r\n", spacer, "next"));
+        }
 
         public void WriteServiceObjectGroup(string[] input)
         {
@@ -192,13 +242,12 @@ namespace Fortibuilder.guts
             _filename = "service_groups.txt";
             var spacer = "    ";
             var objectgroupname = input[0];
-            var groupmembers = input[1];
-
+            string[] groupmembers = input[1].Split('|');
             //var protocoltypes = input[2];
             //string portrangeoutput = null;
 
             File.AppendAllText(_filename, String.Format("{0}{1} \"{2}\"\r\n", spacer, "edit", objectgroupname));
-            switch (input.Count() > 3)
+            switch (input.Count() > 2)
             {
                 case true:
                     string description = null;
@@ -206,17 +255,30 @@ namespace Fortibuilder.guts
                     {
                         description += String.Format("{0} ", input[i]);
                     }
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1} \"{2}\"\r\n", spacer, "set comment ", description.TrimEnd(' ')));
+                    switch (description)
+                    {
+                        case" ":
+                        break;
+                        default:
+                        File.AppendAllText(_filename, String.Format("{0}{0}{1} \"{2}\"\r\n", spacer, "set comment ", description.TrimEnd(' ')));
+                        break;
+                    }
                     break;
             }
 
             string groupmembers2 = null;
+
             foreach (var groupmember in groupmembers)
             {
-                groupmembers2 += String.Format("\"{0}\"",groupmember);
+                if (groupmember == "")
+                {
+                }
+                else { 
+                    groupmembers2 += String.Format("\"{0}\" ",groupmember);
+                }
             }
 
-            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set member", groupmembers2));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set member", groupmembers2.TrimEnd(' ')));
             File.AppendAllText(_filename, String.Format("{0}{1}\r\n", spacer, "next"));
         }
 
@@ -231,46 +293,6 @@ namespace Fortibuilder.guts
             File.AppendAllText(_filename, String.Format("{0}{1} {2}\r\n", spacer, "set dst", route));
             File.AppendAllText(_filename, String.Format("{0}{1} {2}\r\n", spacer, "set gateway", nexthop));
             File.AppendAllText(_filename, String.Format("{0}{1} {2}\r\n",spacer,"set distance",metric));
-            File.AppendAllText(_filename, String.Format("{0}{1}\r\n",spacer,"next"));
-        }
-
-        public void WriteServiceObject(string[] input)
-        {
-            _filename="services.txt";
-            var servicename = input[0];
-            var catagory = input[1];
-            var protocol = input[2];
-            string[] portrange = input[3].Split('|');
-            
-            //var editcount = 1;
-            var spacer = "    ";
-
-            File.AppendAllText(_filename, String.Format("{0}{1} {2}\r\n",spacer,"edit",servicename));
-            //File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer,"set category",catagory));
-            if (protocol.Contains("ICMP"))
-            {
-                var protocolsused = protocol.Split('|');
-                for (var i = 0; i < protocolsused.Count(); i++)
-                {
-                    var icmptypecode = protocolsused[i].Split('\\');
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}",spacer,"set protocol",icmptypecode[0]));
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}", spacer, "set icmptype", icmptypecode[1]));
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1}", spacer, "unset icmpcode"));
-                }
-            }
-            else
-            {
-                var protocolsused = protocol.Split('|');
-                string portout = null;
-                for(var i=0;i<protocolsused.Count()-1;i++)
-                {
-                    foreach (var port in portrange)
-                    { 
-                        portout += String.Format("{0}{1}", port, ',');
-                        File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}{3} {4}\r\n", spacer, "set", protocolsused[i], "-portrange", portout.TrimEnd(',')));
-                    }
-                }
-            }
             File.AppendAllText(_filename, String.Format("{0}{1}\r\n",spacer,"next"));
         }
 

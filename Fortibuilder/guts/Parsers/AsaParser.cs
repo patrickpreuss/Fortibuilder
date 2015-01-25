@@ -63,7 +63,8 @@ namespace Fortibuilder.guts.Parsers
                         objectGroupTotal = 0,
                         serviceGroupTotal = 0,
                         serviceObjectTotal = 0,
-                        unknownObjectTotal = 0;
+                        unknownObjectTotal = 0,
+                        pindex = 0;
 
                     //Temp holder for console output.
                     string consoleoutput = null;
@@ -87,6 +88,7 @@ namespace Fortibuilder.guts.Parsers
                         protocoltype = null,
                         portrange = null,
                         protocolsource = null;
+                    String[] protocolsmade = new string[10];
 
                     var scripter = new Scripter(alloptions);
 
@@ -216,11 +218,12 @@ namespace Fortibuilder.guts.Parsers
                                                 objectGroupTotal++;
                                                 break;
                                             case "protocol":
-                                                string[] addme3 = { objectgroupname, groupmembers, description };
+                                                string[] addme3 = {objectgroupname, groupmembers, description};
                                                 scripter.WriteServiceObjectGroup(addme3);
                                                 objectgroupname = null;
                                                 objectname = null;
                                                 protocoltype = null;
+                                                groupmembers = null;
                                                 portrange = null;
                                                 description = null;
                                                 serviceGroupTotal++;
@@ -279,16 +282,19 @@ namespace Fortibuilder.guts.Parsers
                                                 switch (results[2])
                                                 {
                                                     case "host":
-                                                        objectname += String.Format("{0}/{1},", results[2], "255.255.255.255");
+                                                        objectname += String.Format("{0}/{1},", results[3], "255.255.255.255");
                                                         goto Getmeoutofhere;
                                                     case "object":
-                                                        objectname += String.Format("{0},", results[2]);
+                                                        objectname += String.Format("{0},", results[3]);
                                                         goto Getmeoutofhere;
                                                 }
                                                 break;
                                         }
                                         objectname += String.Format("{0}{1}", results[3], "|");
                                     }
+                                    break;
+                                case "group-object":
+                                    objectname += String.Format("{0}{1}", results[2], ",");
                                     break;
                                 case "icmp-object":
                                     if (isingroup)
@@ -344,7 +350,32 @@ namespace Fortibuilder.guts.Parsers
                                 case "protocol-object":
                                     if (isingroup)
                                     {
-                                        protocoltype += String.Format("{0}{1}", results[2], "|");
+                                        var isdonealready = IsServiceCreated(protocolsmade, results[2]);
+                                        groupmembers += String.Format("{0}{1}", results[2], "|");
+                                        switch (results[2])
+                                        {
+                                            case "udp":
+                                                if (isdonealready) 
+                                                {
+                                                    break;
+                                                }
+                                                    string[] addme = { results[2], protocolsource, "udp|", "1-65535|" };
+                                                    scripter.WriteServiceObject(addme);
+                                                    protocolsmade[pindex] = results[2];
+                                                    pindex++;
+                                                break;
+
+                                            case"tcp":
+                                                if (isdonealready)
+                                                {
+                                                    break;
+                                                }
+                                                    string[] addme2 = { results[2], protocolsource, "tcp|", "1-65535|" };
+                                                    scripter.WriteServiceObject(addme2);
+                                                    protocolsmade[pindex] = results[2];
+                                                    pindex++;
+                                                break;
+                                        }
                                     }
                                     break;
                                 case "port-object":
@@ -354,6 +385,32 @@ namespace Fortibuilder.guts.Parsers
                                         switch (results[2])
                                         {
                                             case "range":
+                                                if (results[3] == "snmp")
+                                                {
+                                                    var isdonealready = IsServiceCreated(protocolsmade, results[4]);
+                                                    if (isdonealready)
+                                                    {
+                                                    
+                                                    switch (results[4])
+                                                    {
+                                                        case "snmptrap":
+                                                            string[] addme = { results[4], protocolsource, "udp|", "162|" };
+                                                            scripter.WriteServiceObject(addme);
+                                                            groupmembers += String.Format("{0}{1}", results[4], "|");
+                                                            protocolsmade[pindex] = results[4];
+                                                            pindex++;
+                                                            break;
+                                                        case "snmpread":
+                                                            string[] addme2 = { results[4], protocolsource, "udp|", "161|" };
+                                                            scripter.WriteServiceObject(addme2);
+                                                            groupmembers += String.Format("{0}{1}", results[4], "|");
+                                                            protocolsmade[pindex] = results[4];
+                                                            pindex++;
+                                                            break;
+                                                    }
+                                                    break;
+                                                    }
+                                                }
                                                 portrange += String.Format("{0}-{1}|", results[3], results[4]);
                                                 break;
                                             case "eq":
@@ -393,7 +450,7 @@ namespace Fortibuilder.guts.Parsers
                          */
                     }
                     e.Result = "completed!";
-                    Dispose();
+                    //Dispose();
                     //  return "completed!,";
                 }
             }
@@ -404,7 +461,7 @@ namespace Fortibuilder.guts.Parsers
                 e.Result = String.Format("{0}{1}{2}{3}", "----Exception handled at *index:",index,"-----\r\n", ex);
                 Writetolog(e.Result.ToString());
                 Writetolog(Throwindir());
-                Dispose();
+                //Dispose();
                 //TODO close files after exception?
                 //return "Error!,";
                 //backgroundWorker1.Dispose();
@@ -519,6 +576,16 @@ namespace Fortibuilder.guts.Parsers
                 }
             }
             return count;
+        }
+
+        private bool IsServiceCreated(string[] servicelist, string servicetocheck)
+        {
+            switch (servicelist.Contains(servicetocheck)) 
+            {
+                case true:
+                    return true; 
+            }
+            return false;
         }
     }
 }
