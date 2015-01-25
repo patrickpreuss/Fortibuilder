@@ -423,13 +423,14 @@ namespace Fortibuilder.guts.Parsers
                         }
 
                     Getmeoutofhere:
-                        index++;
-
+                    index++;
+                        var per1 = index / progress;
+                        e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, per1);
                         switch (writetoconsole)
                         {
                             case true:
                                 var per = index / progress;
-                                var counters = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, per, consoleoutput);
+                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, per, consoleoutput);
                                 //Form1.ReportProgress(per, String.Format("{0},{1}", index, counters));
                                 //ReportProgress this.
                                 //writetoconsole = false;
@@ -437,7 +438,7 @@ namespace Fortibuilder.guts.Parsers
                                 //return String.Format("{0},{1}", index, counters);
                             case false:
                                 var per2 = index / progress;
-                                var counters2 = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, per2, consoleoutput);
+                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, per2, consoleoutput);
                                 //ProgressChangedEventArgs eventArgs = 1;
                                 break;
                                 //return counters2;
@@ -451,7 +452,7 @@ namespace Fortibuilder.guts.Parsers
                     }
                     e.Result = "completed!";
                     //Dispose();
-                    //  return "completed!,";
+                    return;
                 }
             }
 
@@ -578,7 +579,7 @@ namespace Fortibuilder.guts.Parsers
             return count;
         }
 
-        private bool IsServiceCreated(string[] servicelist, string servicetocheck)
+        private static bool IsServiceCreated(string[] servicelist, string servicetocheck)
         {
             switch (servicelist.Contains(servicetocheck)) 
             {
