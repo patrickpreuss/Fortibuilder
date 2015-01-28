@@ -8,6 +8,9 @@ using System.IO;
 using Fortibuilder.guts;
 using Fortibuilder.guts.Parsers;
 using System.Threading.Tasks;
+using System.IO.Ports;
+using System.Threading;
+using Microsoft.Win32;
 
 namespace Fortibuilder
 {
@@ -15,6 +18,18 @@ namespace Fortibuilder
     public partial class Form1 : Form
     {
         public int linecount =0;
+
+        //Begin serialreader shiat TODO cleanup
+        SerialPort sp = new SerialPort();
+        static bool _continue;
+        TextBox bah;
+        Thread readThread;
+        string name;
+        string message;
+        delegate void updateTextDelegate(string newText);
+        StringComparer stringComparer = StringComparer.OrdinalIgnoreCase;
+        public delegate void UpdateTextCallback(string message);
+        //end serialreader stuff
 
         public Form1()
         {
@@ -53,6 +68,108 @@ namespace Fortibuilder
         private void Writelineconsole(string s)
         {
             consoletextBox.Text += string.Format("{0}{1}",s,"\r\n");
+        }
+
+
+        private void OpenFunction(object sender, EventArgs e)
+        {
+            toolStripProgressBar1.Visible = true;
+            toolStripProgressBar1.Minimum = 0;
+            toolStripProgressBar1.Maximum = 100;
+            toolStripProgressBar1.Value = 0;
+
+            var options = new bool[]
+                      {
+                          checkBox1.Checked,
+                          checkBox2.Checked,
+                          checkBox3.Checked,
+                          checkBox4.Checked,
+                          checkBox5.Checked
+                      };
+
+            var open = new OpenFileDialog();
+
+            open.Filter = String.Format("{0}|{1}", "ASA configuration (*.cfg)|*.cfg", "Checkpoint web export index (index.xml)|*.xml");
+            open.Title = String.Format("{0}", "Open Configuration");
+            button5.Enabled = true;
+
+            switch (open.ShowDialog() == DialogResult.OK)
+            {
+                case true:
+                    //Make lables visible
+                    label4.Visible = true; //objects parsed
+                    label6.Visible = true; //lines ignored
+                    label12.Visible = true; //network objects
+                    label13.Visible = true; //object groups
+                    label19.Visible = true; //service groups
+                    label14.Visible = true; //service objects
+                    label17.Visible = true; //unknown
+                    label8.Visible = true; //total lines read
+
+                    var filename = open.FileName;
+
+                    switch (open.FilterIndex)
+                    {
+                        case 1:
+                            //ASA configuration file
+                            var asaparser = new AsaParser(filename, options);
+                            var worker = new BackgroundWorker();
+                            worker.WorkerReportsProgress = true;
+                            worker.WorkerSupportsCancellation = true;
+
+                            worker.ProgressChanged += (sender1, eventArgs) =>
+                            {
+                                RefreshCounters(eventArgs);
+                                Textrefresh();
+                                //backgroundWorker1_ProgressChanged(sender1, eventArgs);
+                            };
+
+                            worker.DoWork += (sender1, e1) =>
+                            {
+                                asaparser.ReadConfiguration(sender1, e1);
+
+                                var sw = Stopwatch.StartNew();
+                                while (sw.Elapsed.TotalSeconds < 1)
+                                {
+                                    switch (e1.Result.ToString())
+                                    {
+                                        case "completed!":
+                                            break;
+                                        case "error!":
+                                            break;
+                                        default:
+                                            worker.ReportProgress(10, e1);
+                                            //worker.ReportProgress(10,"poop"); <- REPORTSSSSSSSSS!!!!!111!!!
+                                            break;
+                                    }
+                                    /*
+                                    if ((sw.Elapsed.TotalMilliseconds % 100) == 0)
+                                        toolStripProgressBar1.Value = 50;
+                                        Writelineconsole(String.Format("{0}{1}", "out:", e1));
+                                        ((BackgroundWorker)sender).ReportProgress();
+                                    ++i;
+                                  */
+                                }
+                            };
+                            worker.RunWorkerCompleted += (sender1, eventArgs) =>
+                            {
+                                //Writelineconsole("completed!");
+                                RefreshCounters(eventArgs);
+
+                                // do something on the UI thread, like
+                                // update status or display "result"
+                            };
+                            worker.RunWorkerAsync();
+                            break;
+                        case 2:
+                            //Checkpoint configuration file
+                            var checkpointparser = new CheckpointParser(filename);
+                            Task<string> returnedstring2 = checkpointparser.ReadConfiguration();
+                            break;
+
+                    }
+                    break;
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -103,7 +220,9 @@ namespace Fortibuilder
 
                             worker.ProgressChanged += (sender1, eventArgs) =>
                             {
-                                backgroundWorker1_ProgressChanged(sender1, eventArgs);
+                                RefreshCounters(eventArgs);
+                                Textrefresh();
+                                //backgroundWorker1_ProgressChanged(sender1, eventArgs);
                             };
 
                             worker.DoWork += (sender1, e1) =>
@@ -113,14 +232,11 @@ namespace Fortibuilder
                                 var sw = Stopwatch.StartNew();
                                 while (sw.Elapsed.TotalSeconds < 1)
                                 {
-                                    
                                     switch (e1.Result.ToString())
                                     {
                                         case "completed!":
-
                                             break;
                                         case "error!":
-
                                             break;
                                         default:
                                             worker.ReportProgress(10, e1);
@@ -138,7 +254,9 @@ namespace Fortibuilder
                             };
                             worker.RunWorkerCompleted += (sender1, eventArgs) =>
                             {
-                                Writelineconsole("completed!");
+                                //Writelineconsole("completed!");
+                                RefreshCounters(eventArgs);
+                                
                                 // do something on the UI thread, like
                                 // update status or display "result"
                             };
@@ -172,13 +290,58 @@ namespace Fortibuilder
            // foreach
         }
 
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs open)
+        private void backgroundWorker1_DoWork(object sender,  DoWorkEventArgs open)
         {
             //get rid of this later
         }
 
+        private void RefreshCounters(ProgressChangedEventArgs e)
+        {
+            var stuff = e.ToString();
+            if ((stuff != null)&&(stuff.Count()<2))
+            {
+                string[] counters = stuff.Split(',');
+                toolStripStatusLabel1.Text = String.Format("{0}", "Completed");
 
+                label8.Text = counters[0]; //lines read
+                label4.Text = counters[1]; //objects parsed - incorrect 
+                label6.Text = counters[2]; //lines ignored
+                label12.Text = counters[3]; //network objects
+                label13.Text = counters[4]; //object groups
+                label19.Text = counters[5];
+                label14.Text = counters[6]; //service objects
+                label17.Text = counters[7]; //unknown objects
+                foreach (var c in counters)
+                {
+                    Writelineconsole(c.ToString());
+                }
+            }
 
+        }
+
+        private void RefreshCounters(RunWorkerCompletedEventArgs e)
+        {
+            var stuff = e.Result as String;
+            if (stuff != null)
+            {
+                string[] counters = stuff.Split(',');
+                toolStripStatusLabel1.Text = String.Format("{0}", "Completed");
+
+                label8.Text = counters[0]; //lines read
+                label4.Text = counters[1]; //objects parsed - incorrect 
+                label6.Text = counters[2]; //lines ignored
+                label12.Text = counters[3]; //network objects
+                label13.Text = counters[4]; //object groups
+                label19.Text = counters[5];
+                label14.Text = counters[6]; //service objects
+                label17.Text = counters[7]; //unknown objects
+                foreach (var c in counters)
+                {
+                    Writelineconsole(c.ToString());
+                }
+            }
+
+        }
         private static int CountLinesInFile(string f)
         {
             var count = 0;
@@ -288,7 +451,7 @@ namespace Fortibuilder
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(String.Format("{0}\r\n{1}\r\n{2}", "Forti-builder","All code within this application was written by Timothy Anderson - timo691@hotmail.com.","Send all usage questions/comments that way."));
+            MessageBox.Show(String.Format("{0}\r\n{1}\r\n{2}", "Forti-builder","All code within this application was written by Timothy Anderson - timo691@hotmail.com.","Send all usage questions/comments/bugs that way :)."));
         }
 
         private void objectsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -368,9 +531,7 @@ namespace Fortibuilder
 
         public void Throwindir()
         {
-
             //Simple method to throw files in directories as needed.
-
             try
             {
                 //string sourcePath = "/var/lib/tftpboot/";
@@ -439,10 +600,230 @@ namespace Fortibuilder
 
         private void openASAConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            OpenFunction(sender,e);
+        }
 
+        private void button8_Click(object sender, EventArgs e)
+        {
+            var bah = Registry.LocalMachine.OpenSubKey("HARDWARE\\DEVICEMAP\\SERIALCOMM");
+            var i = 1;
+            get_comsettings(sp);
+
+            foreach (var s in bah.GetValueNames())
+            {
+                consoletextBox.Text += String.Format("{0}{1}", bah.GetValue(s),"\r\n");
+                comporttextBox9.Text = String.Format("{0}{1}",bah.GetValue(s), "\r\n");
+                i++;
+            }
+
+            
+            baudratetextBox5.Text = sp.BaudRate.ToString();
+            stopbitstextBox3.Text = sp.StopBits.ToString();
+            paritytextBox4.Text = sp.Parity.ToString();
+            databitstextBox6.Text = sp.DataBits.ToString();
+            readtimeouttextBox7.Text = sp.ReadTimeout.ToString();
+        }
+    
+    private void get_comsettings(SerialPort a) 
+        {
+            consoletextBox.Text += String.Format("{0},{1},{2},{3},{4},{5},{6}{7}", "Comm port settings: ",a.PortName,  a.BaudRate , a.StopBits , a.Parity , a.DataBits , a.ReadTimeout,"\r\n"); 
+        }
+
+    private void button9_Click(object sender, System.EventArgs e)
+    {
+        try
+        {
+            var a = Convert.ToInt32(baudratetextBox5.Text);
+            var b = Convert.ToInt32(databitstextBox6.Text);
+
+            sp.PortName = comporttextBox9.Text;
+            sp.BaudRate = a;
+            sp.DataBits = b;
+            //TryToParse(textBox2.Text, a);
+            get_comsettings(sp);
+        }
+        catch (System.Exception ex)
+        {
+            consoletextBox.Text += String.Format("{0}{1}{2}", "Error: ", ex.Message, "\r\n");
         }
     }
 
+    private void button11_Click(object sender, System.EventArgs e)
+    {
+        try
+        {
+            _continue = true;
+            sp.ReadTimeout = 500;
+            sp.PortName = comporttextBox9.Lines[0];
+            sp.Open();
+            readThread = new Thread(Read);
+            readThread.IsBackground = true;
+            readThread.Start();
+            consoletextBox.Text += String.Format("{0}{1}{2}", sp.PortName, " opened", "\r\n");
+            updatetext(sp.PortName + " opened.");
+        }
+        catch (System.Exception ex)
+        {
+            consoletextBox.Text += String.Format("{0}{1}{2}","Initial Error: ",ex.Message,"\r\n");
+        }
+    }
+
+    private void button10_Click(object sender, System.EventArgs e)
+    {
+        try
+        {
+            _continue = false;
+            readThread.Suspend();
+            sp.Close();
+            consoletextBox.Text += String.Format("{0}{1}{2}",sp.PortName," closed","\r\n");
+            updatetext(sp.PortName + " closed.");
+        }
+        catch (System.Exception ex)
+        {
+            consoletextBox.Text += String.Format("{0}{1}{2}","Error: ",ex,"\r\n");
+        }
+    }
+
+    private void updatetext(string s)
+    {
+        if (bah.InvokeRequired)
+        {
+            // this is worker thread 
+
+           var del = new updateTextDelegate(updatetext);
+            bah.Invoke(del, new object[] { s });
+        }
+        else
+        {
+            // this is UI thread
+            bah.Text += String.Format("{0}{1}", s, "\r\n");
+            textrefresh();
+        }
+        //bah.Text += s = "\r\n";
+    }
+
+    private void textrefresh()
+    {
+        bah.SelectionStart = bah.Text.Length;
+        bah.ScrollToCaret();
+        bah.Refresh();
+
+        //audit refresh
+        consoletextBox.SelectionStart = bah.Text.Length;
+        consoletextBox.ScrollToCaret();
+        consoletextBox.Refresh();
+    }
+
+    private void button12_Click(object sender, System.EventArgs e)
+    {
+        _continue = false;
+
+        try
+        {
+            //write line to serial port
+            sp.WriteLine(textBox8.Text);
+            //clear the text box
+            textBox8.Text = "";
+            _continue = true;
+        }
+        catch (System.Exception ex)
+        {
+            consoletextBox.Text += String.Format("{0}{1}{2}", "Error: ", ex, "\r\n");
+            _continue = true;
+        }
+    }
+
+    private void button14_Click(object sender, System.EventArgs e)
+    {
+
+        try
+        {
+            sp.Open();
+            sp.ReadTimeout = 500;
+            consoletextBox.Text += String.Format("{0}{1}{2}", sp.PortName, " opened", "\r\n");
+        }
+        catch (System.Exception ex)
+        {
+            consoletextBox.Text += String.Format("{0}{1}{2}", "Error: ", ex, "\r\n");
+        }
+
+        sp.Close();
+        consoletextBox.Text += String.Format("{0}{1}{2}", sp.PortName, " closed","\r\n");
+    }
+
+    private void button15_Click(object sender, System.EventArgs e)
+    {
+        consoletextBox.Text = "";
+        consoletextBox.Update();
+    }
+
+    private void textBox8_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+    {
+            if (e.KeyValue == 13) { var s = textBox8.Text; send(s); }
+    }
+
+    private void Read()
+    {
+        while (_continue)
+        {
+
+            try
+            {
+
+                Thread.Sleep(100);
+                //foreach (char s in sp.ReadExisting()) { updatetext(s.ToString());  }
+                //bah.Text += message + "\r\n";
+                //string message = sp.ReadLine();
+                var bytes = sp.BytesToRead;
+
+                byte[] buffer = new byte[bytes];
+
+                sp.Read(buffer, 0, bytes);
+
+                var message = "";
+                foreach (var b in buffer)
+                {
+                    message += b;
+                }
+                message = Encoding.ASCII.GetString(buffer);
+                if (message == "") { }
+                else
+                {
+                    bah.BeginInvoke(new UpdateTextCallback(updatetext), new object[] { message.ToString() });
+                }
+
+                //string message = sp.Read(buffer);
+
+                //bah.Show();
+                //textrefresh();
+
+            }
+            catch (TimeoutException) { }
+            catch (Exception ex) { updatetext(ex.ToString()); }
+        }
+    }
+
+    private void send(string s)
+    {
+        _continue = false;
+        try
+        {
+            //write line to serial port
+            sp.WriteLine(s);
+            //clear the text box
+            textBox8.Text = "";
+            //textrefresh();
+            //string s = sp.ReadLine();
+            //Zupdatetext(s);
+            _continue = true;
+        }
+        catch (System.Exception ex)
+        {
+            consoletextBox.Text += String.Format("{0}{1}{2}", "Error: ", ex, "\r\n");
+        }
+    }
+
+    }
     public class DownloadStringTaskAsyncExProgress
     {
         public int ProgressPercentage { get; set; }

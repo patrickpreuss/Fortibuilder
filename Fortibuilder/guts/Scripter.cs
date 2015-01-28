@@ -103,6 +103,25 @@ namespace Fortibuilder.guts
                 index++;
             }
         }
+
+        public void WriteStaticRoute(string[] input)
+        {
+            _filename = "static_routes.txt";
+            var interfacename = input[1];
+            var networkaddress = input[2];
+            var networkmask = input[3];
+            var nexthop = input[4];
+            var metric = input[5];
+
+            File.AppendAllText(_filename, String.Format(" {0} {1}", "edit",_staticroutecounter));
+            File.AppendAllText(_filename, String.Format("  {0} {1}", "set device", interfacename));
+            File.AppendAllText(_filename, String.Format("  {0} {1} {2}", "set dst", networkaddress,networkmask));
+            File.AppendAllText(_filename, String.Format("  {0} {1}", "set gateway", nexthop));
+            File.AppendAllText(_filename, String.Format("  {0} {1}", "set distance", metric));
+            File.AppendAllText(_filename, String.Format(" {0}", "next"));
+            _staticroutecounter++;
+        }
+
         public void WriteNetworkObject(string[] input)
         {
             _filename = "objects.txt";
