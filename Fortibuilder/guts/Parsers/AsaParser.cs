@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Fortibuilder.guts.Parsers
 {
@@ -47,7 +49,7 @@ namespace Fortibuilder.guts.Parsers
             alloptions = options;
         }
 
-        public void ReadConfiguration(object sender, DoWorkEventArgs e)
+        public void ReadConfiguration(object sender, DoWorkEventArgs e, DataTable polTable, DataGridView nattable)
         {
             try
             {
@@ -56,16 +58,19 @@ namespace Fortibuilder.guts.Parsers
                 using (var reader = new StreamReader(new FileStream(_filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.ASCII))
                 {
                     string line;
-                    int 
+                    int
                         objectsParsedTotal = 0,
                         linesIgnoredTotal = 0,
                         networkObjectsTotal = 0,
                         objectGroupTotal = 0,
                         serviceGroupTotal = 0,
                         serviceObjectTotal = 0,
+                        staticRouteTotal = 0,
                         unknownObjectTotal = 0,
+                        policylinesTotal = 0,
+                        natlinesTotal = 0,
                         pindex = 0;
-
+                    
                     //Temp holder for console output.
                     string consoleoutput = null;
                     //stats and progress bar ints
@@ -92,6 +97,30 @@ namespace Fortibuilder.guts.Parsers
 
                     var scripter = new Scripter(alloptions);
 
+                    //policy variables
+                    string polinterfacename = null,
+                        poldescription = null,
+                        polsource = null,
+                        poluser = null,
+                        poldestination = null,
+                        polservice = null,
+                        polaction = null,
+                        pollogging = null;
+
+                    //NAT variables
+                    string natsourceinterface = null,
+                        natdestinationinterface = null,
+                        natoriginaltype = null,
+                        natoriginalsource = null,
+                        natoriginaldestination = null,
+                        nattranslatedtype = null,
+                        nattranslatedsource = null,
+                        nattranslateddest = null,
+                        natnoproxyarp = null,
+                        natroutelookup = null,
+                        natdescription = null;
+
+
                     while ((line = reader.ReadLine()) != null)
                     {
                         String[] results = line.Split(' ');
@@ -107,16 +136,152 @@ namespace Fortibuilder.guts.Parsers
                                 break;
                             case "route":
                                 scripter.WriteStaticRoute(results);
-                                //todo gotofinish
+                                staticRouteTotal++;
+                                goto Getmeoutofhere;
+                            case "access-list":
+                                polinterfacename = results[0];
+                                
+                                switch (results[2])
+                                {
+                                    case "remark":
+                                        for (var i =2;i<results.Count();i++)
+                                        {
+                                            poldescription += String.Format("{0} ",results[i]);
+                                        }
+                                        goto Getmeoutofhere;
+                                    case "extended":
+                                        polaction = results[3];
+                                        var aclindex = 0;
+                                        for (var i = 4; i < results.Count(); i++)
+                                        {
+                                            if ((results[i] == "object") || (results[i] == "object-group"))
+                                            {
+                                                switch (aclindex)
+                                                {
+                                                    case 0:
+                                                        polservice = results[i + 1];
+                                                        aclindex++;
+                                                        break;
+                                                    case 1:
+                                                        polsource = results[i + 1];
+                                                        aclindex++;
+                                                        break;
+                                                    case 2:
+                                                        poldestination = results[i + 1];
+                                                        aclindex = 0;
+                                                        break;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                switch (aclindex)
+                                                {
+                                                    case 0:
+                                                        polservice = results[i];
+                                                        aclindex++;
+                                                        break;
+                                                    case 1:
+                                                        polsource = results[i];
+                                                        aclindex++;
+                                                        break;
+                                                    case 2:
+                                                        poldestination = results[i];
+                                                        aclindex = 0;
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                        //polservice = results[4];
+
+                                        /*
+                                        switch (results[4])
+                                        {
+                                            case"object":
+                                                polservice = results[5];
+                                                break;
+                                            case "object-group":
+                                                polservice = results[5];
+                                                break;
+                                            default:
+                                                polservice = results[4];
+                                                //ACLs with no objects
+                                                break;     
+                                        }
+                                        */
+                                        break;
+                                }
                                 break;
+                            case "nat":
+                                var natindex = 0;
+                                string[] intfces = results[1].Split(',');
+                                natsourceinterface = intfces[0].TrimStart('(');
+                                natdestinationinterface = intfces[1].TrimEnd(')');
+                                switch (results[2])
+                                {
+                                    case"source":
+                                        natoriginaltype = results[3];
+                                        natoriginalsource = results[4];
+                                        natoriginaldestination = results[5];
+                                        if (results[6] == "destination")
+                                        {
+                                            nattranslatedtype = results[7];
+                                            nattranslatedsource = results[8];
+                                            nattranslateddest = results[9];
+                                        }
+                                        var des = false;
+
+                                        for (var i = 10; i < results.Count(); i++)
+                                        {
+                                            if (des == true)
+                                            {
+                                                natdescription += String.Format("{0} ", results[i]);
+                                            }
+                                            else
+                                            {
+                                                switch (results[i])
+                                                {
+                                                    case "description":
+                                                        des = true;
+                                                        break;
+                                                    case "no-proxy-arp":
+                                                        natnoproxyarp = "no-proxy-arp";
+                                                        break;
+                                                    case "route-lookup":
+                                                        natroutelookup = "route-lookup";
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                       
+                                        break;
+                                }
+
+                                Object[] addmenat = 
+                                {
+                                natsourceinterface,
+                                natdestinationinterface,
+                                natoriginaltype,
+                                natoriginalsource,
+                                natoriginaldestination,
+                                nattranslatedtype,
+                                nattranslatedsource,
+                                natoriginaldestination,
+                                natnoproxyarp,
+                                natroutelookup,
+                                natdescription
+                                };
+                                //nattable.Rows.Add(addmenat);
+                                
+                                goto Getmeoutofhere;
+
                             case "object":
                                 switch (isanobject)
                                 {
                                     case true:
                                     AddnetworkobjecttoDB:
                                         //close and add to db.
-                                        string[] addme = { objectname, ip, mask, objecttype, description };
-                                        scripter.WriteNetworkObject(addme);
+                                        string[] addme2 = { objectname, ip, mask, objecttype, description };
+                                        scripter.WriteNetworkObject(addme2);
                                         //write to console
                                         writetoconsole = true;
                                         consoleoutput = String.Format("{0}{1} {2}{3} {4}{5} {6}{7} {8}{9}",
@@ -139,8 +304,8 @@ namespace Fortibuilder.guts.Parsers
                                 {
                                     case true:
                                     AddserviceobjecttoDB:
-                                        string[] addme2 = { objectname, protocolsource, protocoltype, portrange };
-                                        scripter.WriteServiceObject(addme2);
+                                        string[] addme3 = { objectname, protocolsource, protocoltype, portrange };
+                                        scripter.WriteServiceObject(addme3);
                                         //write to console
                                         writetoconsole = true;
                                         consoleoutput = String.Format("{0}{1} {2}{3} {4}{5}","Adding service:",objectname, "type:", protocoltype, "Portrange:", portrange);
@@ -429,12 +594,12 @@ namespace Fortibuilder.guts.Parsers
                     Getmeoutofhere:
                     index++;
                         var per1 = index / progress;
-                        e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, per1);
+                        e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal,serviceGroupTotal, serviceObjectTotal,staticRouteTotal, unknownObjectTotal, per1);
                         switch (writetoconsole)
                         {
                             case true:
                                 var per = index / progress;
-                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, per, consoleoutput);
+                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal,serviceGroupTotal, serviceObjectTotal,staticRouteTotal, unknownObjectTotal, per, consoleoutput);
                                 //Form1.ReportProgress(per, String.Format("{0},{1}", index, counters));
                                 //ReportProgress this.
                                 //writetoconsole = false;
@@ -442,7 +607,7 @@ namespace Fortibuilder.guts.Parsers
                                 //return String.Format("{0},{1}", index, counters);
                             case false:
                                 var per2 = index / progress;
-                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, per2, consoleoutput);
+                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, per2, consoleoutput);
                                 //ProgressChangedEventArgs eventArgs = 1;
                                 break;
                                 //return counters2;
@@ -454,7 +619,8 @@ namespace Fortibuilder.guts.Parsers
                          *    backgroundWorker1.ReportProgress(per,index); 
                          */
                     }
-                    e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceObjectTotal, unknownObjectTotal, 100, consoleoutput,"completed!");
+                    scripter.RunOnceEnd();
+                    e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, 100, consoleoutput,"completed!");
                     //Dispose();
                     return;
                 }
@@ -473,7 +639,7 @@ namespace Fortibuilder.guts.Parsers
             }
         }
 
-        public static void Writetolog(string s)
+        private static void Writetolog(string s)
         {
             var fStream2 = new FileStream(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "log.txt"), FileMode.Append);
             var p = DateTime.Now.ToString();
@@ -484,7 +650,7 @@ namespace Fortibuilder.guts.Parsers
             }
         }
 
-        public string Throwindir()
+        private static string Throwindir()
         {
             //Simple method to throw files in directories as needed.
             try
@@ -535,7 +701,7 @@ namespace Fortibuilder.guts.Parsers
             }
         }
 
-        public static bool CheckIfFileIsBeingUsed(string s)
+        private static bool CheckIfFileIsBeingUsed(string s)
         {
             try
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ using Fortibuilder.guts;
 using Fortibuilder.guts.Parsers;
 using System.Threading.Tasks;
 using System.IO.Ports;
+using System.Reflection;
 using System.Threading;
 using Microsoft.Win32;
 
@@ -19,7 +21,7 @@ namespace Fortibuilder
     {
         public int linecount =0;
 
-        //Begin serialreader shiat TODO cleanup
+        //Begin serialreader shiat TODO cleanup this horrible mess
         SerialPort sp = new SerialPort();
         static bool _continue;
         TextBox bah;
@@ -30,6 +32,14 @@ namespace Fortibuilder
         StringComparer stringComparer = StringComparer.OrdinalIgnoreCase;
         public delegate void UpdateTextCallback(string message);
         //end serialreader stuff
+
+        //Datatables for policy view
+        DataTable policyTable = new DataTable();
+        DataView policyView = new DataView();
+
+        //Datatables for NAT view
+        DataTable natTable = new DataTable();
+        DataView natView = new DataView();
 
         public Form1()
         {
@@ -46,6 +56,87 @@ namespace Fortibuilder
             checkBox3.Checked = true;
             checkBox4.Checked = true;
             checkBox5.Checked = true;
+        }
+
+        public void InitializePolicyTable()
+        {
+            //temp collection values for policy 
+            /*
+
+            var test1 = new DataColumn();
+            var test2 = new DataColumn();
+            var test3 = new DataColumn();
+            var test4 = new DataColumn();
+            var test5 = new DataColumn();
+            var test6 = new DataColumn();
+            var test7 = new DataColumn();
+            var test8 = new DataColumn();
+
+            
+            policyTable.TableName = "policy";
+
+            test1.ColumnName = "Interface name";
+            test2.ColumnName = "Description";
+            test3.ColumnName = "Source";
+            test4.ColumnName = "User";
+            test5.ColumnName = "Destination";
+            test6.ColumnName = "Service";
+            test7.ColumnName = "Action";
+            test8.ColumnName = "Logging";
+
+            policyTable.Columns.Add(test1);
+            policyTable.Columns.Add(test2);
+            policyTable.Columns.Add(test3);
+            policyTable.Columns.Add(test4);
+            policyTable.Columns.Add(test5);
+            policyTable.Columns.Add(test6);
+            policyTable.Columns.Add(test7);
+            policyTable.Columns.Add(test8);
+             */
+            //policyView.DoubleBuffered(true);
+        }
+
+        public void InitializeNatTable()
+        {
+            /*
+            natTable.TableName = "nat table";
+
+            var test1 = new DataColumn();
+            var test2 = new DataColumn();
+            var test3 = new DataColumn();
+            var test4 = new DataColumn();
+            var test5 = new DataColumn();
+            var test6 = new DataColumn();
+            var test7 = new DataColumn();
+            var test8 = new DataColumn();
+            var test9 = new DataColumn();
+            var test10 = new DataColumn();
+            var test11 = new DataColumn();
+
+            test1.ColumnName = "Source Interface";
+            test2.ColumnName = "Destination Interface";
+            test3.ColumnName = "Original NAT Type";
+            test4.ColumnName = "Original Source";
+            test5.ColumnName = "Original Destination";
+            test6.ColumnName = "Translated NAT Type";
+            test7.ColumnName = "Translated Source";
+            test8.ColumnName = "Translated Destination";
+            test9.ColumnName = "No Proxy ARP";
+            test10.ColumnName = "Route-lookup";
+            test11.ColumnName = "Description";
+
+            policyTable.Columns.Add(test1);
+            policyTable.Columns.Add(test2);
+            policyTable.Columns.Add(test3);
+            policyTable.Columns.Add(test4);
+            policyTable.Columns.Add(test5);
+            policyTable.Columns.Add(test6);
+            policyTable.Columns.Add(test7);
+            policyTable.Columns.Add(test8);
+            policyTable.Columns.Add(test9);
+            policyTable.Columns.Add(test10);
+            policyTable.Columns.Add(test11);
+             */
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -126,7 +217,7 @@ namespace Fortibuilder
 
                             worker.DoWork += (sender1, e1) =>
                             {
-                                asaparser.ReadConfiguration(sender1, e1);
+                                asaparser.ReadConfiguration(sender1, e1, policyTable, natdataGridView2);
 
                                 var sw = Stopwatch.StartNew();
                                 while (sw.Elapsed.TotalSeconds < 1)
@@ -227,36 +318,38 @@ namespace Fortibuilder
 
                             worker.DoWork += (sender1, e1) =>
                             {
-                                asaparser.ReadConfiguration(sender1, e1);
+                                asaparser.ReadConfiguration(sender1, e1, policyTable, natdataGridView2);
 
                                 var sw = Stopwatch.StartNew();
-                                while (sw.Elapsed.TotalSeconds < 1)
+
+                                while (sw.Elapsed.TotalSeconds < 0.2)
                                 {
-                                    switch (e1.Result.ToString())
+                                    var s = e1.ToString();
+                                    string[] res = s.Split(',');
+                                    //var progress = res[res.Count()];
+                                    //var s1 = Convert.ToInt32(res[9]);
+                                    
+                                    switch (e1.ToString())
                                     {
                                         case "completed!":
+                                            sw.Stop();
                                             break;
                                         case "error!":
                                             break;
                                         default:
+                                            //RefreshCounters(res);
                                             worker.ReportProgress(10, e1);
+                                            //Textrefresh();
                                             //worker.ReportProgress(10,"poop"); <- REPORTSSSSSSSSS!!!!!111!!!
                                             break;
                                     }
-                                    /*
-                                    if ((sw.Elapsed.TotalMilliseconds % 100) == 0)
-                                        toolStripProgressBar1.Value = 50;
-                                        Writelineconsole(String.Format("{0}{1}", "out:", e1));
-                                        ((BackgroundWorker)sender).ReportProgress();
-                                    ++i;
-                                  */
                                 }
                             };
                             worker.RunWorkerCompleted += (sender1, eventArgs) =>
                             {
-                                //Writelineconsole("completed!");
+                                Writelineconsole("completed!");
                                 RefreshCounters(eventArgs);
-                                
+                                textrefresh();
                                 // do something on the UI thread, like
                                 // update status or display "result"
                             };
@@ -290,18 +383,44 @@ namespace Fortibuilder
            // foreach
         }
 
+        /*
         private void backgroundWorker1_DoWork(object sender,  DoWorkEventArgs open)
         {
             //get rid of this later
         }
+        */
+
+        private void RefreshCounters(string[] e)
+        {
+            
+            if ((e != null) &&(e.Count()<2))
+            {
+                
+                toolStripStatusLabel1.Text = String.Format("{0}", "Running");
+
+                label8.Text = e[0]; //lines read
+                label4.Text = e[1]; //objects parsed - incorrect 
+                label6.Text = e[2]; //lines ignored
+                label12.Text = e[3]; //network objects
+                label13.Text = e[4]; //object groups
+                label19.Text = e[5];
+                label14.Text = e[6]; //service objects
+                label17.Text = e[7]; //unknown objects
+                foreach (var c in e)
+                {
+                    Writelineconsole(c.ToString());
+                }
+            }
+            textrefresh();
+        }
 
         private void RefreshCounters(ProgressChangedEventArgs e)
         {
-            var stuff = e.ToString();
+            var stuff = e.UserState.ToString();
             if ((stuff != null)&&(stuff.Count()<2))
             {
                 string[] counters = stuff.Split(',');
-                toolStripStatusLabel1.Text = String.Format("{0}", "Completed");
+                toolStripStatusLabel1.Text = String.Format("{0}", "Running");
 
                 label8.Text = counters[0]; //lines read
                 label4.Text = counters[1]; //objects parsed - incorrect 
@@ -316,7 +435,7 @@ namespace Fortibuilder
                     Writelineconsole(c.ToString());
                 }
             }
-
+            Textrefresh();
         }
 
         private void RefreshCounters(RunWorkerCompletedEventArgs e)
@@ -340,8 +459,9 @@ namespace Fortibuilder
                     Writelineconsole(c.ToString());
                 }
             }
-
+            Textrefresh();
         }
+
         private static int CountLinesInFile(string f)
         {
             var count = 0;
@@ -759,7 +879,12 @@ namespace Fortibuilder
 
     private void textBox8_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
     {
-            if (e.KeyValue == 13) { var s = textBox8.Text; send(s); }
+        switch (e.KeyValue)
+        {
+            case 13:
+                send(textBox8.Text);
+                break;
+        }
     }
 
     private void Read()
@@ -821,6 +946,16 @@ namespace Fortibuilder
         {
             consoletextBox.Text += String.Format("{0}{1}{2}", "Error: ", ex, "\r\n");
         }
+    }
+
+    private void serialConnectToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        tabControl1.SelectedTab = tabPage3;
+    }
+
+    private void sSHConnectToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        tabControl1.SelectedTab = tabPage4;
     }
 
     }

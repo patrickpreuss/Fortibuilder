@@ -33,9 +33,14 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openASAConfigurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openCheckpointExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.sSHConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.serialConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyConsoleToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.openWorkingDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openScriptDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,6 +49,8 @@
             this.serviceGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addressGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.staticRoutesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.policyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vPNTunnelsifPossibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -52,6 +59,8 @@
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
@@ -61,6 +70,8 @@
             this.button7 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
@@ -96,6 +107,13 @@
             this.IPresultButton = new System.Windows.Forms.Button();
             this.fromIP = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label31 = new System.Windows.Forms.Label();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.button18 = new System.Windows.Forms.Button();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.button16 = new System.Windows.Forms.Button();
             this.textBox8 = new System.Windows.Forms.TextBox();
@@ -121,24 +139,48 @@
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.button17 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.policydataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.natdataGridView2 = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.sSHConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.serialConnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
-            this.checkBox7 = new System.Windows.Forms.CheckBox();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.policyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.vPNTunnelsifPossibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label26 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -152,11 +194,20 @@
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.groupBox16.SuspendLayout();
+            this.groupBox14.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox10.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.groupBox13.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.policydataGridView1)).BeginInit();
+            this.tabPage6.SuspendLayout();
+            this.groupBox15.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.natdataGridView2)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -199,6 +250,30 @@
             this.openCheckpointExportToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
             this.openCheckpointExportToolStripMenuItem.Text = "Open Checkpoint export index.xml";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(253, 6);
+            // 
+            // sSHConnectToolStripMenuItem
+            // 
+            this.sSHConnectToolStripMenuItem.Name = "sSHConnectToolStripMenuItem";
+            this.sSHConnectToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.sSHConnectToolStripMenuItem.Text = "SSH Connect";
+            this.sSHConnectToolStripMenuItem.Click += new System.EventHandler(this.sSHConnectToolStripMenuItem_Click);
+            // 
+            // serialConnectToolStripMenuItem
+            // 
+            this.serialConnectToolStripMenuItem.Name = "serialConnectToolStripMenuItem";
+            this.serialConnectToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.serialConnectToolStripMenuItem.Text = "Serial Connect";
+            this.serialConnectToolStripMenuItem.Click += new System.EventHandler(this.serialConnectToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(253, 6);
+            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
@@ -222,6 +297,11 @@
             this.copyConsoleToClipboardToolStripMenuItem.Name = "copyConsoleToClipboardToolStripMenuItem";
             this.copyConsoleToClipboardToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.copyConsoleToClipboardToolStripMenuItem.Text = "Copy Console to Clipboard";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(214, 6);
             // 
             // openWorkingDirectoryToolStripMenuItem
             // 
@@ -295,6 +375,22 @@
             this.staticRoutesToolStripMenuItem.Text = "Static Routes";
             this.staticRoutesToolStripMenuItem.Click += new System.EventHandler(this.staticRoutesToolStripMenuItem_Click);
             // 
+            // policyToolStripMenuItem
+            // 
+            this.policyToolStripMenuItem.Checked = true;
+            this.policyToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.policyToolStripMenuItem.Name = "policyToolStripMenuItem";
+            this.policyToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.policyToolStripMenuItem.Text = "Policy";
+            // 
+            // vPNTunnelsifPossibleToolStripMenuItem
+            // 
+            this.vPNTunnelsifPossibleToolStripMenuItem.Checked = true;
+            this.vPNTunnelsifPossibleToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.vPNTunnelsifPossibleToolStripMenuItem.Name = "vPNTunnelsifPossibleToolStripMenuItem";
+            this.vPNTunnelsifPossibleToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.vPNTunnelsifPossibleToolStripMenuItem.Text = "VPN Tunnels (if possible)";
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -306,7 +402,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -320,6 +416,7 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Location = new System.Drawing.Point(12, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -396,6 +493,28 @@
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Export Options:";
+            // 
+            // checkBox7
+            // 
+            this.checkBox7.AutoSize = true;
+            this.checkBox7.ForeColor = System.Drawing.Color.SandyBrown;
+            this.checkBox7.Location = new System.Drawing.Point(59, 100);
+            this.checkBox7.Name = "checkBox7";
+            this.checkBox7.Size = new System.Drawing.Size(89, 17);
+            this.checkBox7.TabIndex = 7;
+            this.checkBox7.Text = "VPN Tunnels";
+            this.checkBox7.UseVisualStyleBackColor = true;
+            // 
+            // checkBox6
+            // 
+            this.checkBox6.AutoSize = true;
+            this.checkBox6.ForeColor = System.Drawing.Color.SandyBrown;
+            this.checkBox6.Location = new System.Drawing.Point(6, 100);
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.Size = new System.Drawing.Size(54, 17);
+            this.checkBox6.TabIndex = 7;
+            this.checkBox6.Text = "Policy";
+            this.checkBox6.UseVisualStyleBackColor = true;
             // 
             // checkBox5
             // 
@@ -511,6 +630,27 @@
             this.groupBox5.TabIndex = 3;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Stats:";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.ForeColor = System.Drawing.Color.SandyBrown;
+            this.label26.Location = new System.Drawing.Point(97, 98);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(13, 13);
+            this.label26.TabIndex = 18;
+            this.label26.Text = "0";
+            this.label26.Visible = false;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.ForeColor = System.Drawing.Color.SandyBrown;
+            this.label27.Location = new System.Drawing.Point(51, 98);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(44, 13);
+            this.label27.TabIndex = 17;
+            this.label27.Text = "Routes:";
             // 
             // label19
             // 
@@ -818,6 +958,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.IPresultButton);
             this.groupBox1.Controls.Add(this.fromIP);
+            this.groupBox1.ForeColor = System.Drawing.Color.DarkOrange;
             this.groupBox1.Location = new System.Drawing.Point(6, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(279, 189);
@@ -878,7 +1019,9 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.tabPage3.BackColor = System.Drawing.Color.DimGray;
+            this.tabPage3.Controls.Add(this.groupBox16);
+            this.tabPage3.Controls.Add(this.groupBox14);
             this.tabPage3.Controls.Add(this.groupBox12);
             this.tabPage3.Controls.Add(this.groupBox11);
             this.tabPage3.Controls.Add(this.groupBox10);
@@ -888,6 +1031,73 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Serial Reader";
             // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.textBox7);
+            this.groupBox16.Controls.Add(this.textBox6);
+            this.groupBox16.Controls.Add(this.label32);
+            this.groupBox16.Controls.Add(this.label31);
+            this.groupBox16.ForeColor = System.Drawing.Color.DarkOrange;
+            this.groupBox16.Location = new System.Drawing.Point(6, 3);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(160, 85);
+            this.groupBox16.TabIndex = 1;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "Connectivity Details:";
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(67, 42);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(79, 20);
+            this.textBox7.TabIndex = 3;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(66, 16);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(79, 20);
+            this.textBox6.TabIndex = 2;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(2, 45);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(56, 13);
+            this.label32.TabIndex = 3;
+            this.label32.Text = "Password:";
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.ForeColor = System.Drawing.Color.DarkOrange;
+            this.label31.Location = new System.Drawing.Point(2, 20);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(58, 13);
+            this.label31.TabIndex = 2;
+            this.label31.Text = "Username:";
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.button18);
+            this.groupBox14.ForeColor = System.Drawing.Color.DarkOrange;
+            this.groupBox14.Location = new System.Drawing.Point(6, 300);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(163, 118);
+            this.groupBox14.TabIndex = 12;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "Automation options";
+            // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(3, 19);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(74, 23);
+            this.button18.TabIndex = 13;
+            this.button18.Text = "Import script";
+            this.button18.UseVisualStyleBackColor = true;
+            // 
             // groupBox12
             // 
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -895,6 +1105,7 @@
             this.groupBox12.Controls.Add(this.button16);
             this.groupBox12.Controls.Add(this.textBox8);
             this.groupBox12.Controls.Add(this.label25);
+            this.groupBox12.ForeColor = System.Drawing.Color.DarkOrange;
             this.groupBox12.Location = new System.Drawing.Point(176, 458);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Size = new System.Drawing.Size(614, 44);
@@ -925,6 +1136,7 @@
             // label25
             // 
             this.label25.AutoSize = true;
+            this.label25.ForeColor = System.Drawing.Color.DarkOrange;
             this.label25.Location = new System.Drawing.Point(6, 16);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(53, 13);
@@ -939,6 +1151,7 @@
             this.groupBox11.Controls.Add(this.button11);
             this.groupBox11.Controls.Add(this.button14);
             this.groupBox11.Controls.Add(this.button15);
+            this.groupBox11.ForeColor = System.Drawing.Color.DarkOrange;
             this.groupBox11.Location = new System.Drawing.Point(6, 424);
             this.groupBox11.Name = "groupBox11";
             this.groupBox11.Size = new System.Drawing.Size(163, 78);
@@ -1012,16 +1225,17 @@
             this.groupBox10.Controls.Add(this.label22);
             this.groupBox10.Controls.Add(this.label23);
             this.groupBox10.Controls.Add(this.label24);
-            this.groupBox10.Location = new System.Drawing.Point(3, 3);
+            this.groupBox10.ForeColor = System.Drawing.Color.DarkOrange;
+            this.groupBox10.Location = new System.Drawing.Point(6, 94);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(153, 190);
+            this.groupBox10.Size = new System.Drawing.Size(163, 200);
             this.groupBox10.TabIndex = 1;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Connection Settings:";
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(6, 160);
+            this.button8.Location = new System.Drawing.Point(5, 171);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(61, 23);
             this.button8.TabIndex = 15;
@@ -1032,7 +1246,7 @@
             // comporttextBox9
             // 
             this.comporttextBox9.AllowDrop = true;
-            this.comporttextBox9.Location = new System.Drawing.Point(78, 10);
+            this.comporttextBox9.Location = new System.Drawing.Point(74, 13);
             this.comporttextBox9.Multiline = true;
             this.comporttextBox9.Name = "comporttextBox9";
             this.comporttextBox9.Size = new System.Drawing.Size(60, 20);
@@ -1041,7 +1255,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 16);
+            this.label2.Location = new System.Drawing.Point(16, 20);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(52, 13);
             this.label2.TabIndex = 13;
@@ -1049,7 +1263,7 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(85, 160);
+            this.button9.Location = new System.Drawing.Point(85, 171);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(53, 23);
             this.button9.TabIndex = 12;
@@ -1059,14 +1273,14 @@
             // 
             // readtimeouttextBox7
             // 
-            this.readtimeouttextBox7.Location = new System.Drawing.Point(78, 134);
+            this.readtimeouttextBox7.Location = new System.Drawing.Point(74, 141);
             this.readtimeouttextBox7.Name = "readtimeouttextBox7";
             this.readtimeouttextBox7.Size = new System.Drawing.Size(60, 20);
             this.readtimeouttextBox7.TabIndex = 11;
             // 
             // databitstextBox6
             // 
-            this.databitstextBox6.Location = new System.Drawing.Point(78, 108);
+            this.databitstextBox6.Location = new System.Drawing.Point(74, 118);
             this.databitstextBox6.Name = "databitstextBox6";
             this.databitstextBox6.Size = new System.Drawing.Size(60, 20);
             this.databitstextBox6.TabIndex = 10;
@@ -1074,7 +1288,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(6, 137);
+            this.label20.Location = new System.Drawing.Point(3, 141);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(74, 13);
             this.label20.TabIndex = 9;
@@ -1083,7 +1297,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(7, 111);
+            this.label21.Location = new System.Drawing.Point(23, 121);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(52, 13);
             this.label21.TabIndex = 8;
@@ -1091,14 +1305,14 @@
             // 
             // paritytextBox4
             // 
-            this.paritytextBox4.Location = new System.Drawing.Point(78, 82);
+            this.paritytextBox4.Location = new System.Drawing.Point(74, 92);
             this.paritytextBox4.Name = "paritytextBox4";
             this.paritytextBox4.Size = new System.Drawing.Size(60, 20);
             this.paritytextBox4.TabIndex = 5;
             // 
             // stopbitstextBox3
             // 
-            this.stopbitstextBox3.Location = new System.Drawing.Point(78, 56);
+            this.stopbitstextBox3.Location = new System.Drawing.Point(74, 66);
             this.stopbitstextBox3.Name = "stopbitstextBox3";
             this.stopbitstextBox3.Size = new System.Drawing.Size(60, 20);
             this.stopbitstextBox3.TabIndex = 4;
@@ -1108,7 +1322,7 @@
             this.baudratetextBox5.AllowDrop = true;
             this.baudratetextBox5.AutoCompleteCustomSource.AddRange(new string[] {
             "9600"});
-            this.baudratetextBox5.Location = new System.Drawing.Point(78, 33);
+            this.baudratetextBox5.Location = new System.Drawing.Point(74, 40);
             this.baudratetextBox5.Name = "baudratetextBox5";
             this.baudratetextBox5.Size = new System.Drawing.Size(60, 20);
             this.baudratetextBox5.TabIndex = 3;
@@ -1116,7 +1330,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(23, 85);
+            this.label22.Location = new System.Drawing.Point(32, 95);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(36, 13);
             this.label22.TabIndex = 2;
@@ -1125,7 +1339,7 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(6, 59);
+            this.label23.Location = new System.Drawing.Point(16, 69);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(52, 13);
             this.label23.TabIndex = 1;
@@ -1134,11 +1348,303 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(0, 36);
+            this.label24.Location = new System.Drawing.Point(7, 47);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(61, 13);
             this.label24.TabIndex = 0;
             this.label24.Text = "Baud Rate:";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.BackColor = System.Drawing.Color.DimGray;
+            this.tabPage4.Controls.Add(this.groupBox17);
+            this.tabPage4.Controls.Add(this.groupBox13);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(793, 505);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "SSH Connectivity";
+            // 
+            // groupBox17
+            // 
+            this.groupBox17.ForeColor = System.Drawing.Color.DarkOrange;
+            this.groupBox17.Location = new System.Drawing.Point(5, 134);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(157, 100);
+            this.groupBox17.TabIndex = 1;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "Automation Options:";
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.button17);
+            this.groupBox13.Controls.Add(this.button13);
+            this.groupBox13.Controls.Add(this.textBox5);
+            this.groupBox13.Controls.Add(this.textBox4);
+            this.groupBox13.Controls.Add(this.textBox3);
+            this.groupBox13.Controls.Add(this.label30);
+            this.groupBox13.Controls.Add(this.label29);
+            this.groupBox13.Controls.Add(this.label28);
+            this.groupBox13.ForeColor = System.Drawing.Color.DarkOrange;
+            this.groupBox13.Location = new System.Drawing.Point(5, 6);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(157, 122);
+            this.groupBox13.TabIndex = 0;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Connectivity Details:";
+            // 
+            // button17
+            // 
+            this.button17.Enabled = false;
+            this.button17.Location = new System.Drawing.Point(77, 90);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(70, 23);
+            this.button17.TabIndex = 2;
+            this.button17.Text = "disconnect";
+            this.button17.UseVisualStyleBackColor = true;
+            // 
+            // button13
+            // 
+            this.button13.Location = new System.Drawing.Point(9, 90);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(60, 23);
+            this.button13.TabIndex = 1;
+            this.button13.Text = "connect";
+            this.button13.UseVisualStyleBackColor = true;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(68, 64);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(79, 20);
+            this.textBox5.TabIndex = 3;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(68, 39);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(79, 20);
+            this.textBox4.TabIndex = 2;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(68, 13);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(79, 20);
+            this.textBox3.TabIndex = 1;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(6, 67);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(56, 13);
+            this.label30.TabIndex = 3;
+            this.label30.Text = "Password:";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(4, 42);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(58, 13);
+            this.label29.TabIndex = 2;
+            this.label29.Text = "Username:";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(42, 20);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(20, 13);
+            this.label28.TabIndex = 1;
+            this.label28.Text = "IP:";
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.BackColor = System.Drawing.Color.DimGray;
+            this.tabPage5.Controls.Add(this.groupBox9);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Size = new System.Drawing.Size(793, 505);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Policy Viewer";
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.policydataGridView1);
+            this.groupBox9.ForeColor = System.Drawing.Color.DarkOrange;
+            this.groupBox9.Location = new System.Drawing.Point(120, 3);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(670, 499);
+            this.groupBox9.TabIndex = 8;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Policy View";
+            // 
+            // policydataGridView1
+            // 
+            this.policydataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.policydataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.Column2,
+            this.Column3,
+            this.Column4,
+            this.Column5,
+            this.Column6,
+            this.Column7,
+            this.Column8});
+            this.policydataGridView1.Location = new System.Drawing.Point(7, 19);
+            this.policydataGridView1.Name = "policydataGridView1";
+            this.policydataGridView1.Size = new System.Drawing.Size(657, 474);
+            this.policydataGridView1.TabIndex = 0;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "Interface Name";
+            this.Column1.Name = "Column1";
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Description";
+            this.Column2.Name = "Column2";
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Source";
+            this.Column3.Name = "Column3";
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "User";
+            this.Column4.Name = "Column4";
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "Destination";
+            this.Column5.Name = "Column5";
+            // 
+            // Column6
+            // 
+            this.Column6.HeaderText = "Service";
+            this.Column6.Name = "Column6";
+            // 
+            // Column7
+            // 
+            this.Column7.HeaderText = "Action";
+            this.Column7.Name = "Column7";
+            // 
+            // Column8
+            // 
+            this.Column8.HeaderText = "Logging";
+            this.Column8.Name = "Column8";
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.BackColor = System.Drawing.Color.DimGray;
+            this.tabPage6.Controls.Add(this.groupBox15);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(793, 505);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "NAT Viewer";
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.natdataGridView2);
+            this.groupBox15.ForeColor = System.Drawing.Color.DarkOrange;
+            this.groupBox15.Location = new System.Drawing.Point(125, 3);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(665, 499);
+            this.groupBox15.TabIndex = 0;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "NAT View";
+            // 
+            // natdataGridView2
+            // 
+            this.natdataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.natdataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4,
+            this.dataGridViewTextBoxColumn5,
+            this.dataGridViewTextBoxColumn6,
+            this.dataGridViewTextBoxColumn7,
+            this.dataGridViewTextBoxColumn8,
+            this.Column9,
+            this.Column10,
+            this.Column11,
+            this.Column12,
+            this.Column13});
+            this.natdataGridView2.Location = new System.Drawing.Point(7, 20);
+            this.natdataGridView2.Name = "natdataGridView2";
+            this.natdataGridView2.Size = new System.Drawing.Size(652, 473);
+            this.natdataGridView2.TabIndex = 0;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "Source Interface";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.HeaderText = "Destination Interface";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.HeaderText = "Original Type";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.HeaderText = "Original Source";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.HeaderText = "Original Destination";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.HeaderText = "Translated Type";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.HeaderText = "Translated Source";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.HeaderText = "Translated Destination";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            // 
+            // Column9
+            // 
+            this.Column9.HeaderText = "No Proxy ARP";
+            this.Column9.Name = "Column9";
+            // 
+            // Column10
+            // 
+            this.Column10.HeaderText = "Route Lookup";
+            this.Column10.Name = "Column10";
+            // 
+            // Column11
+            // 
+            this.Column11.HeaderText = "Description";
+            this.Column11.Name = "Column11";
+            // 
+            // Column12
+            // 
+            this.Column12.HeaderText = "Column12";
+            this.Column12.Name = "Column12";
+            // 
+            // Column13
+            // 
+            this.Column13.HeaderText = "Column13";
+            this.Column13.Name = "Column13";
             // 
             // statusStrip1
             // 
@@ -1168,124 +1674,8 @@
             // 
             // backgroundWorker1
             // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(793, 505);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "SSH Connectivity";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.groupBox9);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(793, 505);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Policy Viewer";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // groupBox9
-            // 
-            this.groupBox9.ForeColor = System.Drawing.Color.DarkOrange;
-            this.groupBox9.Location = new System.Drawing.Point(120, 13);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(661, 479);
-            this.groupBox9.TabIndex = 8;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "possible policy datagridview";
-            // 
-            // sSHConnectToolStripMenuItem
-            // 
-            this.sSHConnectToolStripMenuItem.Name = "sSHConnectToolStripMenuItem";
-            this.sSHConnectToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.sSHConnectToolStripMenuItem.Text = "SSH Connect";
-            // 
-            // serialConnectToolStripMenuItem
-            // 
-            this.serialConnectToolStripMenuItem.Name = "serialConnectToolStripMenuItem";
-            this.serialConnectToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.serialConnectToolStripMenuItem.Text = "Serial Connect";
-            // 
-            // checkBox6
-            // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.ForeColor = System.Drawing.Color.SandyBrown;
-            this.checkBox6.Location = new System.Drawing.Point(6, 100);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(54, 17);
-            this.checkBox6.TabIndex = 7;
-            this.checkBox6.Text = "Policy";
-            this.checkBox6.UseVisualStyleBackColor = true;
-            // 
-            // checkBox7
-            // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.ForeColor = System.Drawing.Color.SandyBrown;
-            this.checkBox7.Location = new System.Drawing.Point(59, 100);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(89, 17);
-            this.checkBox7.TabIndex = 7;
-            this.checkBox7.Text = "VPN Tunnels";
-            this.checkBox7.UseVisualStyleBackColor = true;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(253, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(253, 6);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(214, 6);
-            // 
-            // policyToolStripMenuItem
-            // 
-            this.policyToolStripMenuItem.Checked = true;
-            this.policyToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.policyToolStripMenuItem.Name = "policyToolStripMenuItem";
-            this.policyToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.policyToolStripMenuItem.Text = "Policy";
-            // 
-            // vPNTunnelsifPossibleToolStripMenuItem
-            // 
-            this.vPNTunnelsifPossibleToolStripMenuItem.Checked = true;
-            this.vPNTunnelsifPossibleToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.vPNTunnelsifPossibleToolStripMenuItem.Name = "vPNTunnelsifPossibleToolStripMenuItem";
-            this.vPNTunnelsifPossibleToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.vPNTunnelsifPossibleToolStripMenuItem.Text = "VPN Tunnels (if possible)";
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label26.Location = new System.Drawing.Point(97, 98);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(13, 13);
-            this.label26.TabIndex = 18;
-            this.label26.Text = "0";
-            this.label26.Visible = false;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label27.Location = new System.Drawing.Point(51, 98);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(44, 13);
-            this.label27.TabIndex = 17;
-            this.label27.Text = "Routes:";
             // 
             // Form1
             // 
@@ -1320,14 +1710,25 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
+            this.groupBox14.ResumeLayout(false);
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
+            this.tabPage5.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.policydataGridView1)).EndInit();
+            this.tabPage6.ResumeLayout(false);
+            this.groupBox15.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.natdataGridView2)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1445,6 +1846,48 @@
         private System.Windows.Forms.CheckBox checkBox6;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.GroupBox groupBox16;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.GroupBox groupBox17;
+        private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.DataGridView policydataGridView1;
+        private System.Windows.Forms.GroupBox groupBox15;
+        private System.Windows.Forms.DataGridView natdataGridView2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column13;
     }
 }
 
