@@ -28,13 +28,9 @@ namespace Fortibuilder.guts.Parsers
 
         private readonly string _filename;
 
-        private bool _check1 = false,
-                     _check2 = false,
-                     _check3 = false, 
-                     _check4 = false,
-                     _check5 = false; 
+        private bool _check1,_check2,_check3, _check4, _check5; 
         //delete later
-        private bool[] alloptions;
+        private readonly bool[] _alloptions;
 
         private int index = 0;
            
@@ -46,10 +42,10 @@ namespace Fortibuilder.guts.Parsers
             _check3 = options[2];
             _check4 = options[3];
             _check5 = options[4];
-            alloptions = options;
+            _alloptions = options;
         }
 
-        public void ReadConfiguration(object sender, DoWorkEventArgs e, DataTable polTable, DataGridView nattable)
+        public void ReadConfiguration(object sender, DoWorkEventArgs e, DataGridView polTable, DataGridView nattable)
         {
             try
             {
@@ -95,34 +91,11 @@ namespace Fortibuilder.guts.Parsers
                         protocolsource = null;
                     String[] protocolsmade = new string[10];
 
-                    var scripter = new Scripter(alloptions);
-
-                    //policy variables
-                    string polinterfacename = null,
-                        poldescription = null,
-                        polsource = null,
-                        poluser = null,
-                        poldestination = null,
-                        polservice = null,
-                        polaction = null,
-                        pollogging = null;
-
-                    //NAT variables
-                    string natsourceinterface = null,
-                        natdestinationinterface = null,
-                        natoriginaltype = null,
-                        natoriginalsource = null,
-                        natoriginaldestination = null,
-                        nattranslatedtype = null,
-                        nattranslatedsource = null,
-                        nattranslateddest = null,
-                        natnoproxyarp = null,
-                        natroutelookup = null,
-                        natdescription = null;
-
+                    var scripter = new Scripter(_alloptions);
 
                     while ((line = reader.ReadLine()) != null)
                     {
+
                         String[] results = line.Split(' ');
                         //   DebugSave(results); <-This is a debug line
                         switch (results[0])
@@ -139,11 +112,22 @@ namespace Fortibuilder.guts.Parsers
                                 staticRouteTotal++;
                                 goto Getmeoutofhere;
                             case "access-list":
+                                //policy variables
+                                string polinterfacename = null,
+                                    poldescription =null,
+                                    polsource = null,
+                                    poluser = null,
+                                    poldestination = null,
+                                    polservice = null,
+                                    polaction = null,
+                                    pollogging = null;
+
                                 polinterfacename = results[0];
                                 
                                 switch (results[2])
                                 {
                                     case "remark":
+                                        poldescription = null;
                                         for (var i =2;i<results.Count();i++)
                                         {
                                             poldescription += String.Format("{0} ",results[i]);
@@ -156,21 +140,7 @@ namespace Fortibuilder.guts.Parsers
                                         {
                                             if ((results[i] == "object") || (results[i] == "object-group"))
                                             {
-                                                switch (aclindex)
-                                                {
-                                                    case 0:
-                                                        polservice = results[i + 1];
-                                                        aclindex++;
-                                                        break;
-                                                    case 1:
-                                                        polsource = results[i + 1];
-                                                        aclindex++;
-                                                        break;
-                                                    case 2:
-                                                        poldestination = results[i + 1];
-                                                        aclindex = 0;
-                                                        break;
-                                                }
+                                                
                                             }
                                             else
                                             {
@@ -191,27 +161,41 @@ namespace Fortibuilder.guts.Parsers
                                                 }
                                             }
                                         }
-                                        //polservice = results[4];
-
-                                        /*
-                                        switch (results[4])
-                                        {
-                                            case"object":
-                                                polservice = results[5];
-                                                break;
-                                            case "object-group":
-                                                polservice = results[5];
-                                                break;
-                                            default:
-                                                polservice = results[4];
-                                                //ACLs with no objects
-                                                break;     
-                                        }
-                                        */
                                         break;
                                 }
-                                break;
+
+                                
+                                Object[] addmepol = 
+                                {
+                                    polinterfacename,
+                                    poldescription,
+                                    polsource,
+                                    poluser,
+                                    poldestination,
+                                    polservice,
+                                    polaction,
+                                    pollogging
+                                };
+
+                                polTable.Rows.Add(addmepol);
+                                policylinesTotal++;
+                                goto Getmeoutofhere;
+                                //break;
                             case "nat":
+
+                                //NAT variables
+                                string natsourceinterface = null,
+                                    natdestinationinterface = null,
+                                    natoriginaltype = null,
+                                    natoriginalsource = null,
+                                    natoriginaldestination = null,
+                                    nattranslatedtype = null,
+                                    nattranslatedsource = null,
+                                    nattranslateddest = null,
+                                    natnoproxyarp = null,
+                                    natroutelookup = null,
+                                    natdescription = null;
+
                                 var natindex = 0;
                                 string[] intfces = results[1].Split(',');
                                 natsourceinterface = intfces[0].TrimStart('(');
@@ -270,8 +254,9 @@ namespace Fortibuilder.guts.Parsers
                                 natroutelookup,
                                 natdescription
                                 };
-                                //nattable.Rows.Add(addmenat);
                                 
+                                nattable.Rows.Add(addmenat);
+                                natlinesTotal++;
                                 goto Getmeoutofhere;
 
                             case "object":
@@ -297,9 +282,11 @@ namespace Fortibuilder.guts.Parsers
                                         ip = null;
                                         mask = null;
                                         description = null;
+                                        networkObjectsTotal++;
                                         objectsParsedTotal++;
                                         break;
                                 }
+
                                 switch (isaservice)
                                 {
                                     case true:
@@ -315,6 +302,8 @@ namespace Fortibuilder.guts.Parsers
                                         objecttype = null;
                                         protocoltype = null;
                                         portrange = null;
+                                        objectsParsedTotal++;
+                                        serviceObjectTotal++;
                                         break;
                                 }
 
@@ -369,6 +358,7 @@ namespace Fortibuilder.guts.Parsers
                                         mask = null;
                                         description = null;
                                         objectsParsedTotal++;
+                                        networkObjectsTotal++;
                                         break;
                                 }
 
@@ -656,7 +646,7 @@ namespace Fortibuilder.guts.Parsers
             try
             {
                 //string sourcePath = "/var/lib/tftpboot/";
-                var sourcePath = AppDomain.CurrentDomain.BaseDirectory;
+                var sourcePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"\\temp\\");
                 var p = DateTime.Now.ToShortDateString();
                 p = p.Replace('/', '-');
                 var targetPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, p);

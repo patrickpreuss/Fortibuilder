@@ -47,10 +47,11 @@
             this.objectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serviceObjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serviceGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addressGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.staticRoutesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addressGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.policyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vPNTunnelsifPossibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vPNTunnelsifPossibleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -59,6 +60,7 @@
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
             this.checkBox6 = new System.Windows.Forms.CheckBox();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
@@ -70,6 +72,10 @@
             this.button7 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
@@ -93,19 +99,6 @@
             this.consoletextBox = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button6 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.IPresult = new System.Windows.Forms.TextBox();
-            this.toIP = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.IPresultButton = new System.Windows.Forms.Button();
-            this.fromIP = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
@@ -190,9 +183,6 @@
             this.groupBox7.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.groupBox16.SuspendLayout();
             this.groupBox14.SuspendLayout();
@@ -308,12 +298,14 @@
             this.openWorkingDirectoryToolStripMenuItem.Name = "openWorkingDirectoryToolStripMenuItem";
             this.openWorkingDirectoryToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.openWorkingDirectoryToolStripMenuItem.Text = "Open Working Directory";
+            this.openWorkingDirectoryToolStripMenuItem.Click += new System.EventHandler(this.openWorkingDirectoryToolStripMenuItem_Click);
             // 
             // openScriptDirectoryToolStripMenuItem
             // 
             this.openScriptDirectoryToolStripMenuItem.Name = "openScriptDirectoryToolStripMenuItem";
             this.openScriptDirectoryToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.openScriptDirectoryToolStripMenuItem.Text = "Open Script Directory";
+            this.openScriptDirectoryToolStripMenuItem.Click += new System.EventHandler(this.openScriptDirectoryToolStripMenuItem_Click);
             // 
             // exportOptionsToolStripMenuItem
             // 
@@ -322,10 +314,11 @@
             this.objectsToolStripMenuItem,
             this.serviceObjectsToolStripMenuItem,
             this.serviceGroupsToolStripMenuItem,
-            this.addressGroupsToolStripMenuItem,
             this.staticRoutesToolStripMenuItem,
+            this.addressGroupsToolStripMenuItem,
             this.policyToolStripMenuItem,
-            this.vPNTunnelsifPossibleToolStripMenuItem});
+            this.vPNTunnelsifPossibleToolStripMenuItem,
+            this.vPNTunnelsifPossibleToolStripMenuItem1});
             this.exportOptionsToolStripMenuItem.Name = "exportOptionsToolStripMenuItem";
             this.exportOptionsToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
             this.exportOptionsToolStripMenuItem.Text = "Export Options";
@@ -357,15 +350,6 @@
             this.serviceGroupsToolStripMenuItem.Text = "Service Groups";
             this.serviceGroupsToolStripMenuItem.Click += new System.EventHandler(this.serviceGroupsToolStripMenuItem_Click);
             // 
-            // addressGroupsToolStripMenuItem
-            // 
-            this.addressGroupsToolStripMenuItem.Checked = true;
-            this.addressGroupsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.addressGroupsToolStripMenuItem.Name = "addressGroupsToolStripMenuItem";
-            this.addressGroupsToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.addressGroupsToolStripMenuItem.Text = "Address Groups";
-            this.addressGroupsToolStripMenuItem.Click += new System.EventHandler(this.addressGroupsToolStripMenuItem_Click);
-            // 
             // staticRoutesToolStripMenuItem
             // 
             this.staticRoutesToolStripMenuItem.Checked = true;
@@ -375,13 +359,22 @@
             this.staticRoutesToolStripMenuItem.Text = "Static Routes";
             this.staticRoutesToolStripMenuItem.Click += new System.EventHandler(this.staticRoutesToolStripMenuItem_Click);
             // 
+            // addressGroupsToolStripMenuItem
+            // 
+            this.addressGroupsToolStripMenuItem.Checked = true;
+            this.addressGroupsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.addressGroupsToolStripMenuItem.Name = "addressGroupsToolStripMenuItem";
+            this.addressGroupsToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.addressGroupsToolStripMenuItem.Text = "Address Groups";
+            this.addressGroupsToolStripMenuItem.Click += new System.EventHandler(this.addressGroupsToolStripMenuItem_Click);
+            // 
             // policyToolStripMenuItem
             // 
             this.policyToolStripMenuItem.Checked = true;
             this.policyToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.policyToolStripMenuItem.Name = "policyToolStripMenuItem";
             this.policyToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.policyToolStripMenuItem.Text = "Policy";
+            this.policyToolStripMenuItem.Text = "Policy table";
             // 
             // vPNTunnelsifPossibleToolStripMenuItem
             // 
@@ -389,7 +382,13 @@
             this.vPNTunnelsifPossibleToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.vPNTunnelsifPossibleToolStripMenuItem.Name = "vPNTunnelsifPossibleToolStripMenuItem";
             this.vPNTunnelsifPossibleToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.vPNTunnelsifPossibleToolStripMenuItem.Text = "VPN Tunnels (if possible)";
+            this.vPNTunnelsifPossibleToolStripMenuItem.Text = "NAT table";
+            // 
+            // vPNTunnelsifPossibleToolStripMenuItem1
+            // 
+            this.vPNTunnelsifPossibleToolStripMenuItem1.Name = "vPNTunnelsifPossibleToolStripMenuItem1";
+            this.vPNTunnelsifPossibleToolStripMenuItem1.Size = new System.Drawing.Size(206, 22);
+            this.vPNTunnelsifPossibleToolStripMenuItem1.Text = "VPN Tunnels (if possible)";
             // 
             // helpToolStripMenuItem
             // 
@@ -402,7 +401,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -412,7 +411,6 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
@@ -420,7 +418,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(801, 531);
+            this.tabControl1.Size = new System.Drawing.Size(801, 549);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage1
@@ -430,7 +428,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(793, 505);
+            this.tabPage1.Size = new System.Drawing.Size(793, 523);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Object Generator";
             // 
@@ -448,7 +446,7 @@
             this.groupBox3.ForeColor = System.Drawing.Color.DarkOrange;
             this.groupBox3.Location = new System.Drawing.Point(6, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(781, 487);
+            this.groupBox3.Size = new System.Drawing.Size(781, 505);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Object Generator Options";
@@ -458,9 +456,9 @@
             this.groupBox8.BackColor = System.Drawing.Color.DimGray;
             this.groupBox8.Controls.Add(this.button3);
             this.groupBox8.ForeColor = System.Drawing.Color.DarkOrange;
-            this.groupBox8.Location = new System.Drawing.Point(6, 419);
+            this.groupBox8.Location = new System.Drawing.Point(6, 446);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(160, 62);
+            this.groupBox8.Size = new System.Drawing.Size(160, 50);
             this.groupBox8.TabIndex = 3;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "temp/debug area";
@@ -479,6 +477,7 @@
             // groupBox6
             // 
             this.groupBox6.BackColor = System.Drawing.Color.DimGray;
+            this.groupBox6.Controls.Add(this.checkBox8);
             this.groupBox6.Controls.Add(this.checkBox7);
             this.groupBox6.Controls.Add(this.checkBox6);
             this.groupBox6.Controls.Add(this.checkBox5);
@@ -489,16 +488,27 @@
             this.groupBox6.ForeColor = System.Drawing.Color.DarkOrange;
             this.groupBox6.Location = new System.Drawing.Point(6, 19);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(160, 123);
+            this.groupBox6.Size = new System.Drawing.Size(160, 139);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Export Options:";
+            // 
+            // checkBox8
+            // 
+            this.checkBox8.AutoSize = true;
+            this.checkBox8.ForeColor = System.Drawing.Color.SandyBrown;
+            this.checkBox8.Location = new System.Drawing.Point(74, 100);
+            this.checkBox8.Name = "checkBox8";
+            this.checkBox8.Size = new System.Drawing.Size(48, 17);
+            this.checkBox8.TabIndex = 8;
+            this.checkBox8.Text = "NAT";
+            this.checkBox8.UseVisualStyleBackColor = true;
             // 
             // checkBox7
             // 
             this.checkBox7.AutoSize = true;
             this.checkBox7.ForeColor = System.Drawing.Color.SandyBrown;
-            this.checkBox7.Location = new System.Drawing.Point(59, 100);
+            this.checkBox7.Location = new System.Drawing.Point(6, 118);
             this.checkBox7.Name = "checkBox7";
             this.checkBox7.Size = new System.Drawing.Size(89, 17);
             this.checkBox7.TabIndex = 7;
@@ -576,7 +586,7 @@
             this.groupBox7.Controls.Add(this.button7);
             this.groupBox7.Controls.Add(this.listBox1);
             this.groupBox7.ForeColor = System.Drawing.Color.DarkOrange;
-            this.groupBox7.Location = new System.Drawing.Point(6, 315);
+            this.groupBox7.Location = new System.Drawing.Point(6, 342);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(160, 98);
             this.groupBox7.TabIndex = 6;
@@ -604,6 +614,10 @@
             // groupBox5
             // 
             this.groupBox5.BackColor = System.Drawing.Color.DimGray;
+            this.groupBox5.Controls.Add(this.label36);
+            this.groupBox5.Controls.Add(this.label35);
+            this.groupBox5.Controls.Add(this.label34);
+            this.groupBox5.Controls.Add(this.label33);
             this.groupBox5.Controls.Add(this.label26);
             this.groupBox5.Controls.Add(this.label27);
             this.groupBox5.Controls.Add(this.label19);
@@ -624,18 +638,60 @@
             this.groupBox5.Controls.Add(this.label4);
             this.groupBox5.Controls.Add(this.label3);
             this.groupBox5.ForeColor = System.Drawing.Color.DarkOrange;
-            this.groupBox5.Location = new System.Drawing.Point(17, 148);
+            this.groupBox5.Location = new System.Drawing.Point(16, 164);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(135, 161);
+            this.groupBox5.Size = new System.Drawing.Size(135, 176);
             this.groupBox5.TabIndex = 3;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Stats:";
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.ForeColor = System.Drawing.Color.SandyBrown;
+            this.label36.Location = new System.Drawing.Point(97, 129);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(13, 13);
+            this.label36.TabIndex = 22;
+            this.label36.Text = "0";
+            this.label36.Visible = false;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.ForeColor = System.Drawing.Color.SandyBrown;
+            this.label35.Location = new System.Drawing.Point(97, 116);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(13, 13);
+            this.label35.TabIndex = 21;
+            this.label35.Text = "0";
+            this.label35.Visible = false;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.ForeColor = System.Drawing.Color.SandyBrown;
+            this.label34.Location = new System.Drawing.Point(39, 129);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(56, 13);
+            this.label34.TabIndex = 20;
+            this.label34.Text = "NAT lines:";
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.ForeColor = System.Drawing.Color.SandyBrown;
+            this.label33.Location = new System.Drawing.Point(33, 116);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(62, 13);
+            this.label33.TabIndex = 19;
+            this.label33.Text = "Policy lines:";
             // 
             // label26
             // 
             this.label26.AutoSize = true;
             this.label26.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label26.Location = new System.Drawing.Point(97, 98);
+            this.label26.Location = new System.Drawing.Point(97, 90);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(13, 13);
             this.label26.TabIndex = 18;
@@ -646,7 +702,7 @@
             // 
             this.label27.AutoSize = true;
             this.label27.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label27.Location = new System.Drawing.Point(51, 98);
+            this.label27.Location = new System.Drawing.Point(51, 90);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(44, 13);
             this.label27.TabIndex = 17;
@@ -656,7 +712,7 @@
             // 
             this.label19.AutoSize = true;
             this.label19.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label19.Location = new System.Drawing.Point(97, 71);
+            this.label19.Location = new System.Drawing.Point(97, 64);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(13, 13);
             this.label19.TabIndex = 16;
@@ -667,7 +723,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label18.Location = new System.Drawing.Point(12, 71);
+            this.label18.Location = new System.Drawing.Point(12, 64);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(83, 13);
             this.label18.TabIndex = 15;
@@ -677,7 +733,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label17.Location = new System.Drawing.Point(97, 111);
+            this.label17.Location = new System.Drawing.Point(97, 103);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(13, 13);
             this.label17.TabIndex = 14;
@@ -688,7 +744,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label16.Location = new System.Drawing.Point(39, 111);
+            this.label16.Location = new System.Drawing.Point(39, 103);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(56, 13);
             this.label16.TabIndex = 13;
@@ -698,7 +754,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label15.Location = new System.Drawing.Point(12, 132);
+            this.label15.Location = new System.Drawing.Point(13, 139);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(97, 13);
             this.label15.TabIndex = 12;
@@ -708,7 +764,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label14.Location = new System.Drawing.Point(97, 85);
+            this.label14.Location = new System.Drawing.Point(97, 77);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(13, 13);
             this.label14.TabIndex = 11;
@@ -719,7 +775,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label13.Location = new System.Drawing.Point(97, 55);
+            this.label13.Location = new System.Drawing.Point(97, 51);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(13, 13);
             this.label13.TabIndex = 10;
@@ -741,7 +797,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label11.Location = new System.Drawing.Point(10, 85);
+            this.label11.Location = new System.Drawing.Point(10, 77);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(85, 13);
             this.label11.TabIndex = 8;
@@ -751,7 +807,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label10.Location = new System.Drawing.Point(17, 55);
+            this.label10.Location = new System.Drawing.Point(17, 51);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(78, 13);
             this.label10.TabIndex = 7;
@@ -771,7 +827,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label8.Location = new System.Drawing.Point(97, 145);
+            this.label8.Location = new System.Drawing.Point(99, 152);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(13, 13);
             this.label8.TabIndex = 5;
@@ -782,7 +838,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.Color.SandyBrown;
-            this.label7.Location = new System.Drawing.Point(4, 145);
+            this.label7.Location = new System.Drawing.Point(6, 152);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(91, 13);
             this.label7.TabIndex = 4;
@@ -842,7 +898,7 @@
             this.groupBox4.ForeColor = System.Drawing.Color.DarkOrange;
             this.groupBox4.Location = new System.Drawing.Point(172, 19);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(603, 462);
+            this.groupBox4.Size = new System.Drawing.Size(603, 480);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Console:";
@@ -855,12 +911,12 @@
             this.consoletextBox.BackColor = System.Drawing.SystemColors.Desktop;
             this.consoletextBox.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.consoletextBox.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.consoletextBox.Location = new System.Drawing.Point(7, 19);
+            this.consoletextBox.Location = new System.Drawing.Point(6, 16);
             this.consoletextBox.Multiline = true;
             this.consoletextBox.Name = "consoletextBox";
             this.consoletextBox.ReadOnly = true;
             this.consoletextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.consoletextBox.Size = new System.Drawing.Size(591, 408);
+            this.consoletextBox.Size = new System.Drawing.Size(591, 429);
             this.consoletextBox.TabIndex = 0;
             this.consoletextBox.UseWaitCursor = true;
             // 
@@ -869,7 +925,7 @@
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button5.Enabled = false;
             this.button5.ForeColor = System.Drawing.Color.Black;
-            this.button5.Location = new System.Drawing.Point(88, 433);
+            this.button5.Location = new System.Drawing.Point(85, 451);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 2;
@@ -880,142 +936,13 @@
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button4.ForeColor = System.Drawing.Color.Black;
-            this.button4.Location = new System.Drawing.Point(7, 433);
+            this.button4.Location = new System.Drawing.Point(6, 451);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 1;
             this.button4.Text = "Clear";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.BackColor = System.Drawing.Color.DimGray;
-            this.tabPage2.Controls.Add(this.groupBox2);
-            this.tabPage2.Controls.Add(this.groupBox1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(793, 505);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Tools";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.BackColor = System.Drawing.Color.DimGray;
-            this.groupBox2.Controls.Add(this.textBox2);
-            this.groupBox2.Controls.Add(this.button6);
-            this.groupBox2.Controls.Add(this.textBox1);
-            this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.ForeColor = System.Drawing.Color.DarkOrange;
-            this.groupBox2.Location = new System.Drawing.Point(6, 201);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(160, 151);
-            this.groupBox2.TabIndex = 4;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Route Builder:";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(6, 19);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(110, 20);
-            this.textBox2.TabIndex = 4;
-            // 
-            // button6
-            // 
-            this.button6.Enabled = false;
-            this.button6.Location = new System.Drawing.Point(123, 19);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(30, 23);
-            this.button6.TabIndex = 3;
-            this.button6.Text = ">>";
-            this.button6.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(7, 48);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(146, 54);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Text = "Custom Routes Results are Generated Here";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(102, 108);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(51, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Export";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Controls.Add(this.IPresult);
-            this.groupBox1.Controls.Add(this.toIP);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.IPresultButton);
-            this.groupBox1.Controls.Add(this.fromIP);
-            this.groupBox1.ForeColor = System.Drawing.Color.DarkOrange;
-            this.groupBox1.Location = new System.Drawing.Point(6, 6);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(279, 189);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "IP Generator:";
-            // 
-            // button2
-            // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(6, 160);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(72, 23);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Copy results";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // IPresult
-            // 
-            this.IPresult.Location = new System.Drawing.Point(6, 46);
-            this.IPresult.Multiline = true;
-            this.IPresult.Name = "IPresult";
-            this.IPresult.ReadOnly = true;
-            this.IPresult.Size = new System.Drawing.Size(260, 104);
-            this.IPresult.TabIndex = 4;
-            // 
-            // toIP
-            // 
-            this.toIP.Location = new System.Drawing.Point(138, 19);
-            this.toIP.Name = "toIP";
-            this.toIP.Size = new System.Drawing.Size(100, 20);
-            this.toIP.TabIndex = 3;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(116, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(16, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "to";
-            // 
-            // IPresultButton
-            // 
-            this.IPresultButton.Location = new System.Drawing.Point(244, 16);
-            this.IPresultButton.Name = "IPresultButton";
-            this.IPresultButton.Size = new System.Drawing.Size(28, 23);
-            this.IPresultButton.TabIndex = 1;
-            this.IPresultButton.Text = ">>";
-            this.IPresultButton.UseVisualStyleBackColor = true;
-            // 
-            // fromIP
-            // 
-            this.fromIP.Location = new System.Drawing.Point(6, 19);
-            this.fromIP.Name = "fromIP";
-            this.fromIP.Size = new System.Drawing.Size(104, 20);
-            this.fromIP.TabIndex = 0;
             // 
             // tabPage3
             // 
@@ -1027,7 +954,7 @@
             this.tabPage3.Controls.Add(this.groupBox10);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(793, 505);
+            this.tabPage3.Size = new System.Drawing.Size(793, 523);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Serial Reader";
             // 
@@ -1091,6 +1018,7 @@
             // 
             // button18
             // 
+            this.button18.ForeColor = System.Drawing.Color.Black;
             this.button18.Location = new System.Drawing.Point(3, 19);
             this.button18.Name = "button18";
             this.button18.Size = new System.Drawing.Size(74, 23);
@@ -1116,6 +1044,7 @@
             // button16
             // 
             this.button16.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.button16.ForeColor = System.Drawing.Color.Black;
             this.button16.Location = new System.Drawing.Point(564, 10);
             this.button16.Name = "button16";
             this.button16.Size = new System.Drawing.Size(44, 23);
@@ -1161,6 +1090,7 @@
             // 
             // button12
             // 
+            this.button12.ForeColor = System.Drawing.Color.Black;
             this.button12.Location = new System.Drawing.Point(123, 20);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(31, 23);
@@ -1171,6 +1101,7 @@
             // 
             // button10
             // 
+            this.button10.ForeColor = System.Drawing.Color.Black;
             this.button10.Location = new System.Drawing.Point(69, 19);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(48, 24);
@@ -1181,6 +1112,7 @@
             // 
             // button11
             // 
+            this.button11.ForeColor = System.Drawing.Color.Black;
             this.button11.Location = new System.Drawing.Point(14, 20);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(49, 23);
@@ -1191,6 +1123,7 @@
             // 
             // button14
             // 
+            this.button14.ForeColor = System.Drawing.Color.Black;
             this.button14.Location = new System.Drawing.Point(6, 49);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(62, 23);
@@ -1201,6 +1134,7 @@
             // 
             // button15
             // 
+            this.button15.ForeColor = System.Drawing.Color.Black;
             this.button15.Location = new System.Drawing.Point(74, 49);
             this.button15.Name = "button15";
             this.button15.Size = new System.Drawing.Size(75, 23);
@@ -1235,6 +1169,7 @@
             // 
             // button8
             // 
+            this.button8.ForeColor = System.Drawing.Color.Black;
             this.button8.Location = new System.Drawing.Point(5, 171);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(61, 23);
@@ -1263,6 +1198,7 @@
             // 
             // button9
             // 
+            this.button9.ForeColor = System.Drawing.Color.Black;
             this.button9.Location = new System.Drawing.Point(85, 171);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(53, 23);
@@ -1361,7 +1297,7 @@
             this.tabPage4.Controls.Add(this.groupBox13);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(793, 505);
+            this.tabPage4.Size = new System.Drawing.Size(793, 523);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "SSH Connectivity";
             // 
@@ -1396,6 +1332,7 @@
             // button17
             // 
             this.button17.Enabled = false;
+            this.button17.ForeColor = System.Drawing.Color.Black;
             this.button17.Location = new System.Drawing.Point(77, 90);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(70, 23);
@@ -1405,6 +1342,7 @@
             // 
             // button13
             // 
+            this.button13.ForeColor = System.Drawing.Color.Black;
             this.button13.Location = new System.Drawing.Point(9, 90);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(60, 23);
@@ -1466,7 +1404,7 @@
             this.tabPage5.Controls.Add(this.groupBox9);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(793, 505);
+            this.tabPage5.Size = new System.Drawing.Size(793, 523);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Policy Viewer";
             // 
@@ -1544,7 +1482,7 @@
             this.tabPage6.Controls.Add(this.groupBox15);
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(793, 505);
+            this.tabPage6.Size = new System.Drawing.Size(793, 523);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "NAT Viewer";
             // 
@@ -1651,7 +1589,7 @@
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 564);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 582);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(825, 22);
             this.statusStrip1.TabIndex = 4;
@@ -1682,7 +1620,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(825, 586);
+            this.ClientSize = new System.Drawing.Size(825, 604);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
@@ -1704,11 +1642,6 @@
             this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.groupBox16.ResumeLayout(false);
             this.groupBox16.PerformLayout();
@@ -1742,16 +1675,8 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox IPresult;
-        private System.Windows.Forms.TextBox toIP;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button IPresultButton;
-        private System.Windows.Forms.TextBox fromIP;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button button4;
@@ -1801,11 +1726,6 @@
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.GroupBox groupBox12;
         private System.Windows.Forms.Button button16;
@@ -1888,6 +1808,12 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column13;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.ToolStripMenuItem vPNTunnelsifPossibleToolStripMenuItem1;
+        private System.Windows.Forms.CheckBox checkBox8;
     }
 }
 

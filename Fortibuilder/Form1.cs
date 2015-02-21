@@ -58,96 +58,9 @@ namespace Fortibuilder
             checkBox5.Checked = true;
         }
 
-        public void InitializePolicyTable()
-        {
-            //temp collection values for policy 
-            /*
-
-            var test1 = new DataColumn();
-            var test2 = new DataColumn();
-            var test3 = new DataColumn();
-            var test4 = new DataColumn();
-            var test5 = new DataColumn();
-            var test6 = new DataColumn();
-            var test7 = new DataColumn();
-            var test8 = new DataColumn();
-
-            
-            policyTable.TableName = "policy";
-
-            test1.ColumnName = "Interface name";
-            test2.ColumnName = "Description";
-            test3.ColumnName = "Source";
-            test4.ColumnName = "User";
-            test5.ColumnName = "Destination";
-            test6.ColumnName = "Service";
-            test7.ColumnName = "Action";
-            test8.ColumnName = "Logging";
-
-            policyTable.Columns.Add(test1);
-            policyTable.Columns.Add(test2);
-            policyTable.Columns.Add(test3);
-            policyTable.Columns.Add(test4);
-            policyTable.Columns.Add(test5);
-            policyTable.Columns.Add(test6);
-            policyTable.Columns.Add(test7);
-            policyTable.Columns.Add(test8);
-             */
-            //policyView.DoubleBuffered(true);
-        }
-
-        public void InitializeNatTable()
-        {
-            /*
-            natTable.TableName = "nat table";
-
-            var test1 = new DataColumn();
-            var test2 = new DataColumn();
-            var test3 = new DataColumn();
-            var test4 = new DataColumn();
-            var test5 = new DataColumn();
-            var test6 = new DataColumn();
-            var test7 = new DataColumn();
-            var test8 = new DataColumn();
-            var test9 = new DataColumn();
-            var test10 = new DataColumn();
-            var test11 = new DataColumn();
-
-            test1.ColumnName = "Source Interface";
-            test2.ColumnName = "Destination Interface";
-            test3.ColumnName = "Original NAT Type";
-            test4.ColumnName = "Original Source";
-            test5.ColumnName = "Original Destination";
-            test6.ColumnName = "Translated NAT Type";
-            test7.ColumnName = "Translated Source";
-            test8.ColumnName = "Translated Destination";
-            test9.ColumnName = "No Proxy ARP";
-            test10.ColumnName = "Route-lookup";
-            test11.ColumnName = "Description";
-
-            policyTable.Columns.Add(test1);
-            policyTable.Columns.Add(test2);
-            policyTable.Columns.Add(test3);
-            policyTable.Columns.Add(test4);
-            policyTable.Columns.Add(test5);
-            policyTable.Columns.Add(test6);
-            policyTable.Columns.Add(test7);
-            policyTable.Columns.Add(test8);
-            policyTable.Columns.Add(test9);
-            policyTable.Columns.Add(test10);
-            policyTable.Columns.Add(test11);
-             */
-        }
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void IPresultButton_Click(object sender, EventArgs e)
-        {
-          var tool = new Tools();
-            tool.ParseIPList(fromIP.Text, toIP.Text);
         }
 
         private void Showerror(string error)
@@ -217,7 +130,7 @@ namespace Fortibuilder
 
                             worker.DoWork += (sender1, e1) =>
                             {
-                                asaparser.ReadConfiguration(sender1, e1, policyTable, natdataGridView2);
+                                asaparser.ReadConfiguration(sender1, e1, policydataGridView1, natdataGridView2);
 
                                 var sw = Stopwatch.StartNew();
                                 while (sw.Elapsed.TotalSeconds < 1)
@@ -281,7 +194,7 @@ namespace Fortibuilder
 
             var open = new OpenFileDialog();
 
-            open.Filter = String.Format("{0}|{1}", "ASA configuration (*.cfg)|*.cfg", "Checkpoint web export index (index.xml)|*.xml");
+            open.Filter = String.Format("{0}|{1}", "ASA configuration (*.cfg)|*.cfg", "Checkpoint objects.C file (objects_x_y.C)|*.C");
             open.Title = String.Format("{0}","Open Configuration");
             button5.Enabled = true;
 
@@ -311,6 +224,7 @@ namespace Fortibuilder
 
                             worker.ProgressChanged += (sender1, eventArgs) =>
                             {
+                                //TODO report progress
                                 RefreshCounters(eventArgs);
                                 Textrefresh();
                                 //backgroundWorker1_ProgressChanged(sender1, eventArgs);
@@ -318,10 +232,10 @@ namespace Fortibuilder
 
                             worker.DoWork += (sender1, e1) =>
                             {
-                                asaparser.ReadConfiguration(sender1, e1, policyTable, natdataGridView2);
-
+                                asaparser.ReadConfiguration(sender1, e1, policydataGridView1, natdataGridView2);
+                                /*
                                 var sw = Stopwatch.StartNew();
-
+                                
                                 while (sw.Elapsed.TotalSeconds < 0.2)
                                 {
                                     var s = e1.ToString();
@@ -344,6 +258,10 @@ namespace Fortibuilder
                                             break;
                                     }
                                 }
+                                */
+
+                                
+
                             };
                             worker.RunWorkerCompleted += (sender1, eventArgs) =>
                             {
@@ -359,6 +277,9 @@ namespace Fortibuilder
                             //Checkpoint configuration file
                             var checkpointparser = new CheckpointParser(filename);
                             Task<string> returnedstring2 = checkpointparser.ReadConfiguration();
+
+
+
                             break;
                             
                     }
@@ -824,12 +745,16 @@ namespace Fortibuilder
 
     private void textrefresh()
     {
-        bah.SelectionStart = bah.Text.Length;
-        bah.ScrollToCaret();
-        bah.Refresh();
+        if (bah != null)
+        {
+            bah.SelectionStart = bah.Text.Length;
+            bah.ScrollToCaret();
+            bah.Refresh();
 
-        //audit refresh
-        consoletextBox.SelectionStart = bah.Text.Length;
+            //audit refresh
+            consoletextBox.SelectionStart = bah.Text.Length;
+        }
+
         consoletextBox.ScrollToCaret();
         consoletextBox.Refresh();
     }
@@ -956,6 +881,16 @@ namespace Fortibuilder
     private void sSHConnectToolStripMenuItem_Click(object sender, EventArgs e)
     {
         tabControl1.SelectedTab = tabPage4;
+    }
+
+    private void openWorkingDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void openScriptDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
     }
 
     }

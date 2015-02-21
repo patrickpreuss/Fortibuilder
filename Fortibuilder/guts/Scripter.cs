@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 
@@ -12,6 +13,7 @@ namespace Fortibuilder.guts
         //Run once varibles
         private bool[] _options;
         private bool runonceobjects = true, 
+
         runonceobjectgroups = true,
         runonceservicegroups = true,
         runservices = true,
@@ -36,26 +38,26 @@ namespace Fortibuilder.guts
                         switch (index)
                         {
                             case 0:
-                                _filename = "objects.txt";
+                                 _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory+"\\temp\\", "objects.txt");
                                  File.AppendAllText(_filename, String.Format("config firewall address\r\n"));
                                  spacer = "    ";
                                  File.AppendAllText(_filename, String.Format("{0}\"{1}\"\r\n", spacer, "edit all"));
                                  File.AppendAllText(_filename, String.Format("{0}{1}\r\n", spacer, "next"));
                                 break;
                             case 1:
-                                _filename = "object_groups.txt";
+                                _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory+"\\temp\\","object_groups.txt");
                                 File.AppendAllText(_filename, String.Format("config firewall addrgrp\r\n"));
                                 break;
                             case 2:
-                                _filename = "services.txt";
+                                _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "services.txt");
                                 File.AppendAllText(_filename, String.Format("config firewall service custom\r\n"));
                                 break;
                             case 3:
-                                _filename = "service_groups.txt";
+                                _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "service_groups.txt");
                                 File.AppendAllText(_filename, String.Format("config firewall service group\r\n"));
                                 break;
                             case 4:
-                                _filename = "static_routes.txt";
+                                _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "static_routes.txt");
                                 File.AppendAllText(_filename, String.Format("config router static\r\n"));
                                 break;
                         }
@@ -76,25 +78,24 @@ namespace Fortibuilder.guts
                     case true:
                         switch (index)
                         {
-                                //TODO get rid of filler ends :)
                             case 0:
-                                _filename = "objects.txt";
+                                _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "objects.txt");
                                 File.AppendAllText(_filename, String.Format("{0}", "end"));
                                 break;
                             case 1:
-                                _filename = "object_groups.txt";
+                                _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "object_groups.txt");
                                 File.AppendAllText(_filename, String.Format("{0}", "end"));
                                 break;
                             case 2:
-                                _filename = "services.txt";
+                                _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "services.txt");
                                 File.AppendAllText(_filename, String.Format("{0}", "end"));
                                 break;
                             case 3:
-                                _filename = "service_groups.txt";
+                                _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "service_groups.txt");
                                 File.AppendAllText(_filename, String.Format("{0}", "end"));
                                 break;
                             case 4:
-                                _filename = "static_routes.txt";
+                                _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "static_routes.txt");
                                 File.AppendAllText(_filename, String.Format("{0}", "end"));
                                 break;                            
                         }   
@@ -106,25 +107,25 @@ namespace Fortibuilder.guts
 
         public void WriteStaticRoute(string[] input)
         {
-            _filename = "static_routes.txt";
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "static_routes.txt");
             var interfacename = input[1];
             var networkaddress = input[2];
             var networkmask = input[3];
             var nexthop = input[4];
             var metric = input[5];
 
-            File.AppendAllText(_filename, String.Format(" {0} {1}", "edit",_staticroutecounter));
-            File.AppendAllText(_filename, String.Format("  {0} {1}", "set device", interfacename));
-            File.AppendAllText(_filename, String.Format("  {0} {1} {2}", "set dst", networkaddress,networkmask));
-            File.AppendAllText(_filename, String.Format("  {0} {1}", "set gateway", nexthop));
-            File.AppendAllText(_filename, String.Format("  {0} {1}", "set distance", metric));
-            File.AppendAllText(_filename, String.Format(" {0}", "next"));
+            File.AppendAllText(_filename, String.Format(" {0} {1}\r\n", "edit", _staticroutecounter));
+            File.AppendAllText(_filename, String.Format("  {0} {1}\r\n", "set device", interfacename));
+            File.AppendAllText(_filename, String.Format("  {0} {1} {2}\r\n", "set dst", networkaddress, networkmask));
+            File.AppendAllText(_filename, String.Format("  {0} {1}\r\n", "set gateway", nexthop));
+            File.AppendAllText(_filename, String.Format("  {0} {1}\r\n", "set distance", metric));
+            File.AppendAllText(_filename, String.Format(" {0}\r\n", "next"));
             _staticroutecounter++;
         }
 
         public void WriteNetworkObject(string[] input)
         {
-            _filename = "objects.txt";
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "objects.txt");
             
             var objectname = input[0];
             var ip = input[1];
@@ -148,8 +149,8 @@ namespace Fortibuilder.guts
                     break;
                 case "range":
                     File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set type", objecttype));
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1}{2}",spacer,"set end-ip"));
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1}{2}", spacer, "set start-ip"));
+                    File.AppendAllText(_filename, String.Format("{0}{0}{1}{2}\r\n", spacer, "set end-ip"));
+                    File.AppendAllText(_filename, String.Format("{0}{0}{1}{2}\r\n", spacer, "set start-ip"));
                     break;
             }
                
@@ -172,7 +173,7 @@ namespace Fortibuilder.guts
 
         public void WriteNetworkObjectGroup(string[] input)
         {
-            _filename = "object_groups.txt";
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "object_groups.txt");
 
             var spacer= "    "; 
             var objectgroupname = input[0];
@@ -218,7 +219,7 @@ namespace Fortibuilder.guts
 
         public void WriteServiceObject(string[] input)
         {
-            _filename = "services.txt";
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "services.txt");
             var servicename = input[0];
             var catagory = input[1];
             var protocol = input[2];
@@ -235,9 +236,9 @@ namespace Fortibuilder.guts
                 for (var i = 0; i < protocolsused.Count(); i++)
                 {
                     var icmptypecode = protocolsused[i].Split('\\');
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}", spacer, "set protocol", icmptypecode[0]));
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}", spacer, "set icmptype", icmptypecode[1]));
-                    File.AppendAllText(_filename, String.Format("{0}{0}{1}", spacer, "unset icmpcode"));
+                    File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set protocol", icmptypecode[0]));
+                    File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set icmptype", icmptypecode[1]));
+                    File.AppendAllText(_filename, String.Format("{0}{0}{1}\r\n", spacer, "unset icmpcode"));
                 }
             }
 
@@ -258,7 +259,7 @@ namespace Fortibuilder.guts
         public void WriteServiceObjectGroup(string[] input)
         {
             //NOTE TO SELF. The only real thing that belongs in this is members and comments for the groups.
-            _filename = "service_groups.txt";
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "service_groups.txt");
             var spacer = "    ";
             var objectgroupname = input[0];
             string[] groupmembers = input[1].Split('|');
@@ -303,7 +304,7 @@ namespace Fortibuilder.guts
 
         public void WriteStaticRoute(string networkinterface, string route, string nexthop, int metric, int routenumber)
         {
-            _filename = "static_routes.txt";
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "static_routes.txt");
             var spacer = "  ";
 
             File.AppendAllText(_filename, String.Format("{0}{1} {2}\r\n", spacer,"edit",_staticroutecounter));
@@ -318,6 +319,7 @@ namespace Fortibuilder.guts
         //Function is for debugging purposes.
         public void DebugSave(string[] stuff)
         {
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log.txt");
             var indexme = 0;
             var fullstring = "";
 
