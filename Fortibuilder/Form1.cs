@@ -277,9 +277,6 @@ namespace Fortibuilder
                             //Checkpoint configuration file
                             var checkpointparser = new CheckpointParser(filename);
                             Task<string> returnedstring2 = checkpointparser.ReadConfiguration();
-
-
-
                             break;
                             
                     }
