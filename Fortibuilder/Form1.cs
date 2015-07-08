@@ -175,14 +175,23 @@ namespace Fortibuilder
                                     var tlines = CountLinesInFile(filename);
                                     asaparser.ReadConfiguration(sender ,e1, policydataGridView1, natdataGridView2);
 
-
+                                    /*
                                     var progress = e1.Result.ToString().Split(',');
 
-                                    var index = Convert.ToInt32(progress[0]);
-                                    var prognum = (index * 100) % tlines;
-                                    toolStripProgressBar1.Value = prognum;
-                                    worker.ReportProgress(prognum, e1);
-                                    textrefresh();
+                                    try
+                                    {
+                                        var index = Convert.ToInt32(progress[0]);
+                                        var prognum = (index * 100) % tlines;
+                                        toolStripProgressBar1.Value = prognum;
+                                        worker.ReportProgress(prognum, e1);
+                                        textrefresh();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        textrefresh();
+                                    }
+                                    */
+
                                     /*
                                     var sw = Stopwatch.StartNew();
                                     outernest:

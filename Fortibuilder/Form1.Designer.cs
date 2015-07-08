@@ -240,52 +240,52 @@
             // openCheckpointExportToolStripMenuItem
             // 
             this.openCheckpointExportToolStripMenuItem.Name = "openCheckpointExportToolStripMenuItem";
-            this.openCheckpointExportToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
-            this.openCheckpointExportToolStripMenuItem.Text = "Open Checkpoint export index.xml";
+            this.openCheckpointExportToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+            this.openCheckpointExportToolStripMenuItem.Text = "Open Checkpoint objects.c";
             this.openCheckpointExportToolStripMenuItem.Click += new System.EventHandler(this.openCheckpointExportToolStripMenuItem_Click);
             // 
             // openASAConfigurationToolStripMenuItem
             // 
             this.openASAConfigurationToolStripMenuItem.Name = "openASAConfigurationToolStripMenuItem";
-            this.openASAConfigurationToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.openASAConfigurationToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.openASAConfigurationToolStripMenuItem.Text = "Open ASA configuration";
             this.openASAConfigurationToolStripMenuItem.Click += new System.EventHandler(this.openASAConfigurationToolStripMenuItem_Click);
             // 
             // openGenericcsvToolStripMenuItem
             // 
             this.openGenericcsvToolStripMenuItem.Name = "openGenericcsvToolStripMenuItem";
-            this.openGenericcsvToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.openGenericcsvToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.openGenericcsvToolStripMenuItem.Text = "Open Generic .csv";
             this.openGenericcsvToolStripMenuItem.Click += new System.EventHandler(this.openGenericcsvToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(253, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(214, 6);
             // 
             // sSHConnectToolStripMenuItem
             // 
             this.sSHConnectToolStripMenuItem.Name = "sSHConnectToolStripMenuItem";
-            this.sSHConnectToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.sSHConnectToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.sSHConnectToolStripMenuItem.Text = "SSH Connect";
             this.sSHConnectToolStripMenuItem.Click += new System.EventHandler(this.sSHConnectToolStripMenuItem_Click);
             // 
             // serialConnectToolStripMenuItem
             // 
             this.serialConnectToolStripMenuItem.Name = "serialConnectToolStripMenuItem";
-            this.serialConnectToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.serialConnectToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.serialConnectToolStripMenuItem.Text = "Serial Connect";
             this.serialConnectToolStripMenuItem.Click += new System.EventHandler(this.serialConnectToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(253, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(214, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(256, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -1586,9 +1586,9 @@
             // 
             this.groupBox15.Controls.Add(this.natdataGridView2);
             this.groupBox15.ForeColor = System.Drawing.Color.DarkOrange;
-            this.groupBox15.Location = new System.Drawing.Point(125, 3);
+            this.groupBox15.Location = new System.Drawing.Point(121, 3);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(665, 499);
+            this.groupBox15.Size = new System.Drawing.Size(669, 499);
             this.groupBox15.TabIndex = 0;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "NAT View";

@@ -14,6 +14,7 @@
 using System;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -67,52 +68,53 @@ namespace Fortibuilder.guts.Parsers
        public void ReadConfiguration(object sender, DoWorkEventArgs e, DataGridView polTable, DataGridView nattable)
        // public Task ReadConfiguration(object sender, ProgressChangedEventArgs e1ProgressChangedEventArgs, DoWorkEventArgs e, DataGridView polTable, DataGridView nattable)
         {
-            try
-            {
-                
                 //setup form data
                 var progress = CountLinesInFile(_filename);
+
+                string line;
+                int
+                    objectsParsedTotal = 0,
+                    linesIgnoredTotal = 0,
+                    networkObjectsTotal = 0,
+                    objectGroupTotal = 0,
+                    serviceGroupTotal = 0,
+                    serviceObjectTotal = 0,
+                    staticRouteTotal = 0,
+                    unknownObjectTotal = 0,
+                    policylinesTotal = 0,
+                    natlinesTotal = 0,
+                    pindex = 0;
+
+                //Temp holder for console output.
+                string consoleoutput = null;
+                //stats and progress bar ints
+                var db = new ASADB("test.db");
+                //All the ASA and fortigate config variables that will be interchanged. 
+                bool isingroup = false,
+                    isanobject = false,
+                    isaservice = false,
+                    isaservicegroup = false,
+                    writetoconsole = false;
+
+                string objectname = null,
+                    objectgroupname = null,
+                    objecttype = null,
+                    groupmembers = null,
+                    objectgrouptype = null,
+                    ip = null,
+                    mask = null,
+                    description = null,
+                    protocoltype = null,
+                    portrange = null,
+                    protocolsource = null;
+                String[] protocolsmade = new string[10];
+                try
+                {
+
+                var scripter = new Scripter(_alloptions);
                 using (var reader = new StreamReader(new FileStream(_filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.ASCII))
                 {
-                    string line;
-                    int
-                        objectsParsedTotal = 0,
-                        linesIgnoredTotal = 0,
-                        networkObjectsTotal = 0,
-                        objectGroupTotal = 0,
-                        serviceGroupTotal = 0,
-                        serviceObjectTotal = 0,
-                        staticRouteTotal = 0,
-                        unknownObjectTotal = 0,
-                        policylinesTotal = 0,
-                        natlinesTotal = 0,
-                        pindex = 0;
                     
-                    //Temp holder for console output.
-                    string consoleoutput = null;
-                    //stats and progress bar ints
-                    var db = new ASADB("test.db");
-                    //All the ASA and fortigate config variables that will be interchanged. 
-                    bool isingroup = false,
-                        isanobject = false,
-                        isaservice = false,
-                        isaservicegroup = false,
-                        writetoconsole = false;
-
-                    string objectname = null,
-                        objectgroupname = null,
-                        objecttype = null,
-                        groupmembers = null,
-                        objectgrouptype = null,
-                        ip = null,
-                        mask = null,
-                        description = null,
-                        protocoltype = null,
-                        portrange = null,
-                        protocolsource = null;
-                    String[] protocolsmade = new string[10];
-
-                    var scripter = new Scripter(_alloptions);
 
                     while ((line = reader.ReadLine()) != null)
                     {
@@ -221,65 +223,72 @@ namespace Fortibuilder.guts.Parsers
                                 string[] intfces = results[1].Split(',');
                                 natsourceinterface = intfces[0].TrimStart('(');
                                 natdestinationinterface = intfces[1].TrimEnd(')');
-                                switch (results[2])
-                                {
-                                    case"source":
-                                        natoriginaltype = results[3];
-                                        natoriginalsource = results[4];
-                                        natoriginaldestination = results[5];
-                                        if (results[6] == "destination")
-                                        {
-                                            nattranslatedtype = results[7];
-                                            nattranslatedsource = results[8];
-                                            nattranslateddest = results[9];
-                                        }
-                                        var des = false;
 
-                                        for (var i = 10; i < results.Count(); i++)
+                                //begin determining whether or not we have an IP pool/dynamic or VIP/static NAT
+                                switch (results[3])
+                                {
+                                    case "dynamic":
+                                        goto Getmeoutofhere;
+                                        break;
+                                    case "static":
+                                        switch (results[2])
                                         {
-                                            if (des == true)
-                                            {
-                                                natdescription += String.Format("{0} ", results[i]);
-                                            }
-                                            else
-                                            {
-                                                switch (results[i])
+                                            case "source":
+                                                natoriginaltype = results[3];
+                                                natoriginalsource = results[4];
+                                                natoriginaldestination = results[5];
+                                                if (results[6] == "destination")
                                                 {
-                                                    case "description":
-                                                        des = true;
-                                                        break;
-                                                    case "no-proxy-arp":
-                                                        natnoproxyarp = "no-proxy-arp";
-                                                        break;
-                                                    case "route-lookup":
-                                                        natroutelookup = "route-lookup";
-                                                        break;
+                                                    nattranslatedtype = results[7];
+                                                    nattranslatedsource = results[8];
+                                                    nattranslateddest = results[9];
                                                 }
-                                            }
+                                                var des = false;
+
+                                                for (var i = 10; i < results.Count(); i++)
+                                                {
+                                                    if (des == true)
+                                                    {
+                                                        natdescription += String.Format("{0} ", results[i]);
+                                                    }
+                                                    else
+                                                    {
+                                                        switch (results[i])
+                                                        {
+                                                            case "description":
+                                                                des = true;
+                                                                break;
+                                                            case "no-proxy-arp":
+                                                                natnoproxyarp = "no-proxy-arp";
+                                                                break;
+                                                            case "route-lookup":
+                                                                natroutelookup = "route-lookup";
+                                                                break;
+                                                        }
+                                                    }
+                                                }
+                                                Object[] addmenat =
+                                                {
+                                                    natsourceinterface,
+                                                    natdestinationinterface,
+                                                    natoriginaltype,
+                                                    natoriginalsource,
+                                                    natoriginaldestination,
+                                                    nattranslatedtype,
+                                                    nattranslatedsource,
+                                                    natoriginaldestination,
+                                                    natnoproxyarp,
+                                                    natroutelookup,
+                                                    natdescription
+                                                };
+
+                                                nattable.Rows.Add(addmenat);
+                                                natlinesTotal++;
+                                                goto Getmeoutofhere;
                                         }
-                                       
                                         break;
                                 }
-
-                                Object[] addmenat = 
-                                {
-                                natsourceinterface,
-                                natdestinationinterface,
-                                natoriginaltype,
-                                natoriginalsource,
-                                natoriginaldestination,
-                                nattranslatedtype,
-                                nattranslatedsource,
-                                natoriginaldestination,
-                                natnoproxyarp,
-                                natroutelookup,
-                                natdescription
-                                };
-                                
-                                nattable.Rows.Add(addmenat);
-                                natlinesTotal++;
-                                goto Getmeoutofhere;
-
+                                break;
                             case "object":
                                 switch (isanobject)
                                 {
@@ -610,14 +619,10 @@ namespace Fortibuilder.guts.Parsers
                         {
                             case true:
                                 e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, policylinesTotal, natlinesTotal, consoleoutput);
-                                //Form1.ReportProgress(per, String.Format("{0},{1}", index, counters));
-                                //ReportProgress this.
-                                //writetoconsole = false;
                                 break;
                                 //return String.Format("{0},{1}", index, counters);
                             case false:
                                 e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, policylinesTotal, natlinesTotal, consoleoutput);
-                                //ProgressChangedEventArgs eventArgs = 1;
                                 break;
                                 //return counters2;
                         }
@@ -628,7 +633,9 @@ namespace Fortibuilder.guts.Parsers
                          *    backgroundWorker1.ReportProgress(per,index); 
                          */
                     }
+
                     scripter.RunOnceEnd();
+                    consoleoutput = Throwindir();
                     e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", "completed!", objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, policylinesTotal, natlinesTotal, consoleoutput);
                     //Dispose();
                     return;
@@ -638,7 +645,7 @@ namespace Fortibuilder.guts.Parsers
             catch (Exception ex)
             {
                 //MessageBox.Show();
-                e.Result = String.Format("{0}{1}{2}{3}", "----Exception handled at *index:",index,"-----\r\n", ex);
+                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, policylinesTotal, natlinesTotal, ex);
                 Writetolog(e.Result.ToString());
                 Writetolog(Throwindir());
                 //Dispose();
@@ -659,44 +666,40 @@ namespace Fortibuilder.guts.Parsers
             }
         }
 
-        private static string Throwindir()
+        private string Throwindir()
         {
             //Simple method to throw files in directories as needed.
             try
             {
                 //string sourcePath = "/var/lib/tftpboot/";
-                var sourcePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"\\temp\\");
-                var p = DateTime.Now.ToShortDateString();
-                p = p.Replace('/', '-');
-                var targetPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, p);
+                var sourcePath = String.Format("{0}temp\\", AppDomain.CurrentDomain.BaseDirectory);
 
-                if (System.IO.Directory.Exists(sourcePath))
+                var p = String.Format("{0}_{1}", _filename.Split('\\').Last(), DateTime.Now.ToString());
+                //sanitize invalid filename chars
+                p = p.Replace('/', '-');
+                p = p.Replace('\\', '_');
+                p = p.Replace(':', '_');
+                p = p.Replace('*', '_');
+                p = p.Replace('?', '_');
+                p = p.Replace('"', '_');
+                p = p.Replace('<', '_');
+                p = p.Replace('>', '_');
+                p = p.Replace('|', '_');
+
+                //Combine info into the new dir
+                var targetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, p);
+
+                if (Directory.Exists(sourcePath))
                 {
-                    string[] files = System.IO.Directory.GetFiles(sourcePath);
+                    string[] files = Directory.GetFiles(sourcePath);
                     // Copy the files and overwrite destination files if they already exist.
                     Directory.CreateDirectory(targetPath);
                     foreach (var s in files)
                     {
                         if (CheckIfFileIsBeingUsed(s)) { ; }
-
-                            string[] filenames = { "object_groups.txt", "objects.txt", "service_groups.txt", "services.txt", "static_routes.txt" };
-
-                            for (var i = 0; i > filenames.Count(); i++)
-                            {
-                                var destfilename = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, p, filenames[i]);
-                                File.Move(System.IO.Path.Combine(sourcePath, filenames[i]), destfilename);
-                            }
-                            /*
-                            // Use static Path methods to extract only the file name from the path.
-                            fileName = System.IO.Path.GetFileName(s);
-                            destFile = System.IO.Path.Combine(targetPath, fileName);
-
-                            if (File.Exists(destFile))
-                                File.Delete(destFile);
-                            System.IO.File.Move(s, destFile);
-                            */
-                            return String.Format("{0}", "save successful!");
+                        File.Move(Path.Combine(s), Path.Combine(targetPath, s.Split('\\').Last()));
                     }
+                    Process.Start(@targetPath);
                     return String.Format("{0}", "save successful!");
                 }
                 else
@@ -706,7 +709,7 @@ namespace Fortibuilder.guts.Parsers
             }
             catch (Exception ex)
             {
-               return  String.Format("{0} {1}","EX:" ,ex);
+               return  String.Format("{0} {1}","Error attempting to copy to dir:" ,ex);
             }
         }
 
