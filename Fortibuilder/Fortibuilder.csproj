@@ -78,8 +78,9 @@
     <Compile Include="guts\DB\Object.cs" />
     <Compile Include="guts\Parsers\AsaParser.cs" />
     <Compile Include="guts\Parsers\CheckpointParser.cs" />
+    <Compile Include="guts\Parsers\GenericParser.cs" />
     <Compile Include="guts\Scripter.cs" />
-    <Compile Include="guts\SshReader.cs" />
+    <Compile Include="guts\SshClientHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="guts\SerialReader.cs" />

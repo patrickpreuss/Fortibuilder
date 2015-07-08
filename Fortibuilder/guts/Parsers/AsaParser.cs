@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Fortibuilder.guts.Parsers
 {
@@ -28,7 +30,7 @@ namespace Fortibuilder.guts.Parsers
 
         private readonly string _filename;
 
-        private bool _check1,_check2,_check3, _check4, _check5; 
+        private bool _check1, _check2, _check3, _check4, _check5, _check6, _check7, _check8; 
         //delete later
         private readonly bool[] _alloptions;
 
@@ -42,13 +44,19 @@ namespace Fortibuilder.guts.Parsers
             _check3 = options[2];
             _check4 = options[3];
             _check5 = options[4];
+            _check6 = options[5];
+            _check7 = options[6];
+            _check8 = options[7];
             _alloptions = options;
         }
 
-        public void ReadConfiguration(object sender, DoWorkEventArgs e, DataGridView polTable, DataGridView nattable)
+
+       public void ReadConfiguration(object sender, DoWorkEventArgs e, DataGridView polTable, DataGridView nattable)
+       // public Task ReadConfiguration(object sender, ProgressChangedEventArgs e1ProgressChangedEventArgs, DoWorkEventArgs e, DataGridView polTable, DataGridView nattable)
         {
             try
             {
+                
                 //setup form data
                 var progress = CountLinesInFile(_filename);
                 using (var reader = new StreamReader(new FileStream(_filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), Encoding.ASCII))
@@ -583,21 +591,19 @@ namespace Fortibuilder.guts.Parsers
 
                     Getmeoutofhere:
                     index++;
-                        var per1 = index / progress;
-                        e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal,serviceGroupTotal, serviceObjectTotal,staticRouteTotal, unknownObjectTotal, per1);
+                        e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal,serviceGroupTotal, serviceObjectTotal,staticRouteTotal, unknownObjectTotal, policylinesTotal, natlinesTotal);
+                        
                         switch (writetoconsole)
                         {
                             case true:
-                                var per = index / progress;
-                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal,serviceGroupTotal, serviceObjectTotal,staticRouteTotal, unknownObjectTotal, per, consoleoutput);
+                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, policylinesTotal, natlinesTotal, consoleoutput);
                                 //Form1.ReportProgress(per, String.Format("{0},{1}", index, counters));
                                 //ReportProgress this.
                                 //writetoconsole = false;
                                 break;
                                 //return String.Format("{0},{1}", index, counters);
                             case false:
-                                var per2 = index / progress;
-                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, per2, consoleoutput);
+                                e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, policylinesTotal, natlinesTotal, consoleoutput);
                                 //ProgressChangedEventArgs eventArgs = 1;
                                 break;
                                 //return counters2;
@@ -610,7 +616,7 @@ namespace Fortibuilder.guts.Parsers
                          */
                     }
                     scripter.RunOnceEnd();
-                    e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, 100, consoleoutput,"completed!");
+                    e.Result = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}", "completed!", objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal, serviceGroupTotal, serviceObjectTotal, staticRouteTotal, unknownObjectTotal, policylinesTotal, natlinesTotal, consoleoutput);
                     //Dispose();
                     return;
                 }

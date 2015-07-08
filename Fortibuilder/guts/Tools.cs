@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Fortibuilder.guts
@@ -46,15 +47,22 @@ namespace Fortibuilder.guts
             var unsignedinteger = new Regex(@"^\d*$");
             var isanInt = unsignedinteger.Match(input);
 
-            if (isanInt.Success)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return isanInt.Success;
 
+        }
+
+        public static int CountLinesInFile(string f)
+        {
+            var count = 0;
+
+            using (var r = new StreamReader(f))
+            {
+                while (r.ReadLine() != null)
+                {
+                    count++;
+                }
+            }
+            return count;
         }
     }
 }

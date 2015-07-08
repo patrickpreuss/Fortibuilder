@@ -13,6 +13,7 @@ using System.IO.Ports;
 using System.Reflection;
 using System.Threading;
 using Microsoft.Win32;
+using Renci.SshNet;
 
 namespace Fortibuilder
 {
@@ -23,6 +24,8 @@ namespace Fortibuilder
 
         //Begin serialreader shiat TODO cleanup this horrible mess
         SerialPort sp = new SerialPort();
+        private SshClient sshClient = null;
+
         static bool _continue;
         TextBox bah;
         Thread readThread;
@@ -40,14 +43,20 @@ namespace Fortibuilder
         //Datatables for NAT view
         DataTable natTable = new DataTable();
         DataView natView = new DataView();
+        private SshClientHandler _sshClientHandler = new SshClientHandler();
+
+        private TaskScheduler _scheduler = null;
 
         public Form1()
         {
             InitializeComponent();
+            _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
+
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.WorkerSupportsCancellation = true;
             toolStripStatusLabel1.Visible = true;
             toolStripProgressBar1.Visible = false;
+            //bah.Cursor = DefaultCursor;
             toolStripStatusLabel1.Text = String.Format("{0}","Loaded form");
 
             //Turn on all export options for debugging purposes.
@@ -56,6 +65,12 @@ namespace Fortibuilder
             checkBox3.Checked = true;
             checkBox4.Checked = true;
             checkBox5.Checked = true;
+            checkBox6.Checked = true;
+            checkBox7.Checked = true;
+            checkBox8.Checked = true;
+
+            
+
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -72,10 +87,11 @@ namespace Fortibuilder
         private void Writelineconsole(string s)
         {
             consoletextBox.Text += string.Format("{0}{1}",s,"\r\n");
+            
         }
 
 
-        private void OpenFunction(object sender, EventArgs e)
+        private async void OpenFunction(object sender, EventArgs e)
         {
             toolStripProgressBar1.Visible = true;
             toolStripProgressBar1.Minimum = 0;
@@ -88,201 +104,171 @@ namespace Fortibuilder
                           checkBox2.Checked,
                           checkBox3.Checked,
                           checkBox4.Checked,
-                          checkBox5.Checked
+                          checkBox5.Checked,
+                          checkBox6.Checked,
+                          checkBox7.Checked,
+                          checkBox8.Checked
                       };
 
             var open = new OpenFileDialog();
 
-            open.Filter = String.Format("{0}|{1}", "ASA configuration (*.cfg)|*.cfg", "Checkpoint web export index (index.xml)|*.xml");
+            open.Filter = String.Format("{0}|{1}|{2}", "ASA configuration (*.cfg)|*.cfg", "Checkpoint objects.C (objects.C)|*.C", "Generic.csv (objects.csv)|*.csv");
             open.Title = String.Format("{0}", "Open Configuration");
             button5.Enabled = true;
 
             switch (open.ShowDialog() == DialogResult.OK)
             {
                 case true:
-                    //Make lables visible
-                    label4.Visible = true; //objects parsed
-                    label6.Visible = true; //lines ignored
-                    label12.Visible = true; //network objects
-                    label13.Visible = true; //object groups
-                    label19.Visible = true; //service groups
-                    label14.Visible = true; //service objects
-                    label17.Visible = true; //unknown
-                    label8.Visible = true; //total lines read
-
+                    
                     var filename = open.FileName;
+                    var isvalid = ValidateFile(filename);
+                    switch (isvalid) { 
+                        case true:
+  
+                            label4.Visible = true; //objects parsed
+                            label6.Visible = true; //lines ignored
+                            label12.Visible = true; //network objects
+                            label13.Visible = true; //object groups
+                            label19.Visible = true; //service groups
+                            label14.Visible = true; //service objects
+                            label26.Visible = true; //static routes
+                            label17.Visible = true; //unknown
+                            label35.Visible = true; //Policy lines
+                            label15.Visible = true; //NAT lines
+                            label8.Visible = true; //total lines read
 
-                    switch (open.FilterIndex)
-                    {
-                        case 1:
-                            //ASA configuration file
-                            var asaparser = new AsaParser(filename, options);
-                            var worker = new BackgroundWorker();
-                            worker.WorkerReportsProgress = true;
-                            worker.WorkerSupportsCancellation = true;
+                        switch (open.FilterIndex)
+                        {
+                            case 1:
+                                //ASA configuration file
+                                //var asaparser = new AsaParser(filename, options);
+                                //Task.Factory.StartNew(() => asaparser.ReadConfiguration())
+                                
+                                
+                                var asaparser = new AsaParser(filename, options);
+                                var worker = new BackgroundWorker();
+                                worker.WorkerReportsProgress = true;
+                                worker.WorkerSupportsCancellation = true;
 
-                            worker.ProgressChanged += (sender1, eventArgs) =>
-                            {
-                                RefreshCounters(eventArgs);
-                                Textrefresh();
-                                //backgroundWorker1_ProgressChanged(sender1, eventArgs);
-                            };
-
-                            worker.DoWork += (sender1, e1) =>
-                            {
-                                asaparser.ReadConfiguration(sender1, e1, policydataGridView1, natdataGridView2);
-
-                                var sw = Stopwatch.StartNew();
-                                while (sw.Elapsed.TotalSeconds < 1)
+                                worker.ProgressChanged += (sender1, eventArgs) =>
                                 {
-                                    switch (e1.Result.ToString())
+                                    RefreshCounters(eventArgs);
+                                    Textrefresh();
+                                    //backgroundWorker1_ProgressChanged(sender1, eventArgs);
+                                };
+
+                                worker.DoWork += (sender1, e1) =>
+                                {
+                                    var tlines = CountLinesInFile(filename);
+                                    asaparser.ReadConfiguration(sender ,e1, policydataGridView1, natdataGridView2);
+
+
+                                    var progress = e1.Result.ToString().Split(',');
+
+                                    var index = Convert.ToInt32(progress[0]);
+                                    var prognum = (index * 100) % tlines;
+                                    toolStripProgressBar1.Value = prognum;
+                                    worker.ReportProgress(prognum, e1);
+                                    textrefresh();
+                                    /*
+                                    var sw = Stopwatch.StartNew();
+                                    outernest:
+                                    switch (sw.ElapsedMilliseconds)
                                     {
-                                        case "completed!":
-                                            break;
-                                        case "error!":
-                                            break;
-                                        default:
-                                            worker.ReportProgress(10, e1);
-                                            //worker.ReportProgress(10,"poop"); <- REPORTSSSSSSSSS!!!!!111!!!
+                                        case 100:
+                                             var results = e1.Result.ToString().Split(',');
+
+                                        switch (results[0])
+                                        {
+                                            case "completed!":
+                                                break;
+                                            case "error!":
+                                                break;
+                                            default:
+                                                var temp = Convert.ToInt32(results[0]);
+                                                var progress = (temp * 100) % tlines;
+                                                worker.ReportProgress(progress, e1);
+                                                //worker.ReportProgress(10,"poop"); <- REPORTSSSSSSSSS!!!!!111!!!
+                                                break;
+                                        }
+                                        sw.Reset();
                                             break;
                                     }
-                                    /*
-                                    if ((sw.Elapsed.TotalMilliseconds % 100) == 0)
-                                        toolStripProgressBar1.Value = 50;
-                                        Writelineconsole(String.Format("{0}{1}", "out:", e1));
-                                        ((BackgroundWorker)sender).ReportProgress();
-                                    ++i;
-                                  */
-                                }
-                            };
-                            worker.RunWorkerCompleted += (sender1, eventArgs) =>
-                            {
-                                //Writelineconsole("completed!");
-                                RefreshCounters(eventArgs);
+                                */     
+                                };
+                                worker.RunWorkerCompleted += (sender1, eventArgs) =>
+                                {
+                                    //Writelineconsole("completed!");
+                                    RefreshCounters(eventArgs);
 
-                                // do something on the UI thread, like
-                                // update status or display "result"
-                            };
-                            worker.RunWorkerAsync();
-                            break;
-                        case 2:
-                            //Checkpoint configuration file
-                            var checkpointparser = new CheckpointParser(filename);
-                            Task<string> returnedstring2 = checkpointparser.ReadConfiguration();
-                            break;
+                                    // do something on the UI thread, like
+                                    // update status or display "result"
+                                };
 
+                                worker.RunWorkerAsync();
+                                break;
+ 
+                            case 2:
+                                //Checkpoint configuration file
+                                var checkpointparser = new CheckpointParser(filename, options);
+
+                                var progressIndicator = new Progress<int>(ReportProgress);
+                                var read = await checkpointparser.ReadConfiguration(progressIndicator);//UploadPicturesAsync(GenerateTestImages(), progressIndicator);
+                                
+                                MessageBox.Show(String.Format("{0}","Checkpoint Read Completed"));
+                                
+                                //Task<string> returnedstring2 = checkpointparser.ReadConfiguration();
+                                break;
+                            case 3:
+                                var genericparse = new GenericParser(filename, options);
+                                genericparse.OpenFile();
+                                MessageBox.Show(string.Format("{0}", "completed"));
+                                break;
+                        }
+                        break;
+                        case false:
+                            MessageBox.Show(String.Format("{0}","Unknown file read error"));
+                            break;
                     }
-                    break;
+                        return;
             }
+            
+        }
+
+        private void ReportProgress(int progress)
+        {
+            toolStripProgressBar1.Value = progress;
+            //UI Update
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            toolStripProgressBar1.Visible = true;
-            toolStripProgressBar1.Minimum = 0;
-            toolStripProgressBar1.Maximum = 100;
-            toolStripProgressBar1.Value = 0;
+            OpenFunction(sender,e);           
+        }
 
-            var options = new bool[]
-                      {
-                          checkBox1.Checked,
-                          checkBox2.Checked,
-                          checkBox3.Checked,
-                          checkBox4.Checked,
-                          checkBox5.Checked
-                      };
-
-            var open = new OpenFileDialog();
-
-            open.Filter = String.Format("{0}|{1}", "ASA configuration (*.cfg)|*.cfg", "Checkpoint objects.C file (objects_x_y.C)|*.C");
-            open.Title = String.Format("{0}","Open Configuration");
-            button5.Enabled = true;
-
-            switch (open.ShowDialog() == DialogResult.OK)
+        private static bool ValidateFile(string filename)
+        {
+            using (
+                var reader = new StreamReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite),Encoding.ASCII))
             {
-                case true:
-                //Make lables visible
-                    label4.Visible = true; //objects parsed
-                    label6.Visible = true; //lines ignored
-                    label12.Visible = true; //network objects
-                    label13.Visible = true; //object groups
-                    label19.Visible = true; //service groups
-                    label14.Visible = true; //service objects
-                    label17.Visible = true; //unknown
-                    label8.Visible = true; //total lines read
-
-                    var filename = open.FileName;
-
-                    switch (open.FilterIndex)
+                for (var i = 0; i < 10; i++)
+                {
+                    var line = reader.ReadLine();
+                    switch(line)
                     {
-                        case 1:
-                            //ASA configuration file
-                            var asaparser = new AsaParser(filename, options);
-                            var worker = new BackgroundWorker();
-                            worker.WorkerReportsProgress = true;
-                            worker.WorkerSupportsCancellation = true;
-
-                            worker.ProgressChanged += (sender1, eventArgs) =>
-                            {
-                                //TODO report progress
-                                RefreshCounters(eventArgs);
-                                Textrefresh();
-                                //backgroundWorker1_ProgressChanged(sender1, eventArgs);
-                            };
-
-                            worker.DoWork += (sender1, e1) =>
-                            {
-                                asaparser.ReadConfiguration(sender1, e1, policydataGridView1, natdataGridView2);
-                                /*
-                                var sw = Stopwatch.StartNew();
-                                
-                                while (sw.Elapsed.TotalSeconds < 0.2)
-                                {
-                                    var s = e1.ToString();
-                                    string[] res = s.Split(',');
-                                    //var progress = res[res.Count()];
-                                    //var s1 = Convert.ToInt32(res[9]);
-                                    
-                                    switch (e1.ToString())
-                                    {
-                                        case "completed!":
-                                            sw.Stop();
-                                            break;
-                                        case "error!":
-                                            break;
-                                        default:
-                                            //RefreshCounters(res);
-                                            worker.ReportProgress(10, e1);
-                                            //Textrefresh();
-                                            //worker.ReportProgress(10,"poop"); <- REPORTSSSSSSSSS!!!!!111!!!
-                                            break;
-                                    }
-                                }
-                                */
-
-                                
-
-                            };
-                            worker.RunWorkerCompleted += (sender1, eventArgs) =>
-                            {
-                                Writelineconsole("completed!");
-                                RefreshCounters(eventArgs);
-                                textrefresh();
-                                // do something on the UI thread, like
-                                // update status or display "result"
-                            };
-                            worker.RunWorkerAsync();
+                        case null:
+                            //donothing
                             break;
-                        case 2:
-                            //Checkpoint configuration file
-                            var checkpointparser = new CheckpointParser(filename);
-                            Task<string> returnedstring2 = checkpointparser.ReadConfiguration();
-                            break;
-                            
+                        default:
+                            if (line.Contains("ASA Version") || filename.Contains(".C") || filename.Contains(".csv"))
+                        {
+                            return true;
+                        }
+                        break;
                     }
-                   break;
+                }
+                return false;
             }
-                             
         }
 
         private int GetProgress(int index, int totallinecount)
@@ -335,6 +321,7 @@ namespace Fortibuilder
         private void RefreshCounters(ProgressChangedEventArgs e)
         {
             var stuff = e.UserState.ToString();
+
             if ((stuff != null)&&(stuff.Count()<2))
             {
                 string[] counters = stuff.Split(',');
@@ -365,7 +352,7 @@ namespace Fortibuilder
                 toolStripStatusLabel1.Text = String.Format("{0}", "Completed");
 
                 label8.Text = counters[0]; //lines read
-                label4.Text = counters[1]; //objects parsed - incorrect 
+                label4.Text = counters[1]; //objects parsed 
                 label6.Text = counters[2]; //lines ignored
                 label12.Text = counters[3]; //network objects
                 label13.Text = counters[4]; //object groups
@@ -401,16 +388,18 @@ namespace Fortibuilder
             if (stuff != null)
             {
                 string[] counters = stuff.Split(',');
-                //TODO - Fix all this shit. labels are all wrong..... grand total label update (label8.Text)
                 label8.Text = counters[0]; //lines read
-                label4.Text = counters[1]; //objects parsed - incorrect 
+                label4.Text = counters[1]; //objects parsed 
                 label6.Text = counters[2]; //lines ignored
                 label12.Text = counters[3]; //network objects
                 label13.Text = counters[4]; //object groups
-                label19.Text = counters[5];
+                label19.Text = counters[5]; //service groups
                 label14.Text = counters[6]; //service objects
-                label17.Text = counters[7]; //unknown objects
-
+                label26.Text = counters[7]; //static routes
+                label17.Text = counters[8]; //unknown objects
+                label35.Text = counters[9]; //Policy lines
+                label15.Text = counters[10]; //NAT lines
+                //index, objectsParsedTotal, linesIgnoredTotal, networkObjectsTotal, objectGroupTotal,serviceGroupTotal, serviceObjectTotal,staticRouteTotal, unknownObjectTotal, per, consoleoutput
                 for (var i = 9; i < counters.Count(); i++)
                 {
                     consoletextBox.Text += String.Format("{0},{1}", counters[i], "\r\n");
@@ -430,14 +419,17 @@ namespace Fortibuilder
             consoletextBox.Refresh();
 
             //statistics refresh.. dump if causing issues later.
-            label4.Refresh();
-            label6.Refresh();
-            label12.Refresh();
-            label13.Refresh();
-            label14.Refresh();
-            label17.Refresh();
-            label19.Refresh();
-            label8.Refresh();
+            label8.Refresh(); //lines read
+            label4.Refresh(); //objects parsed 
+            label6.Refresh(); //lines ignored
+            label12.Refresh(); //network objects
+            label13.Refresh(); //object groups
+            label19.Refresh(); //service groups
+            label14.Refresh(); //service objects
+            label26.Refresh(); //static routes
+            label17.Refresh(); //unknown objects
+            label35.Refresh(); //Policy lines
+            label15.Refresh(); //NAT lines
         }
 
 
@@ -448,15 +440,19 @@ namespace Fortibuilder
             {
                 string[] counters = stuff.Split(',');
                 toolStripStatusLabel1.Text = String.Format("{0}", "Completed");
-                
+
                 label8.Text = counters[0]; //lines read
-                label4.Text = counters[1]; //objects parsed - incorrect 
+                label4.Text = counters[1]; //objects parsed 
                 label6.Text = counters[2]; //lines ignored
                 label12.Text = counters[3]; //network objects
                 label13.Text = counters[4]; //object groups
-                label19.Text = counters[5];
+                label19.Text = counters[5]; //service groups
                 label14.Text = counters[6]; //service objects
-                label17.Text = counters[7]; //unknown objects
+                label26.Text = counters[7]; //static routes
+                label17.Text = counters[8]; //unknown objects
+                label35.Text = counters[9]; //Policy lines
+                label15.Text = counters[10]; //NAT lines
+                
                 foreach (var c in counters)
                 {
                     Writelineconsole(c.ToString());
@@ -577,7 +573,7 @@ namespace Fortibuilder
                 var p = DateTime.Now.ToShortDateString();
                 p = p.Replace('/', '-');
                 var targetPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory,p);
-
+                
                 if (System.IO.Directory.Exists(sourcePath))
                 {
                     string[] files = System.IO.Directory.GetFiles(sourcePath);
@@ -890,7 +886,73 @@ namespace Fortibuilder
 
     }
 
+    private async void openCheckpointExportToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        OpenFunction(sender,e);
     }
+
+    private void copyConsoleToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void button13_Click(object sender, EventArgs e)
+    {
+       
+        _sshClientHandler.Connect(sshClient, toolStripStatusLabel1, tabPage4, textBox3.Text, textBox4.Text, textBox5.Text);
+        IsConnnected();
+    }
+
+        private void IsConnnected()
+        {
+            switch (sshClient.IsConnected)
+            {
+                //enable options
+                case true:
+                    button17.Enabled = true;
+                    button1.Enabled = true;
+                    button2.Enabled = true;
+                    break;
+                case false:
+                    button17.Enabled = false;
+                    button1.Enabled = false;
+                    button2.Enabled = false;
+                    break;
+            }
+        }
+
+    private void button1_Click_1(object sender, EventArgs e)
+    {
+        var open = new OpenFileDialog();
+         open.Filter = String.Format("{0}", "Web Filter (*.csv)|*.csv");
+            open.Title = String.Format("{0}", "Open Configuration");
+            button5.Enabled = true;
+
+        switch (open.ShowDialog() == DialogResult.OK)
+        {
+            case true:
+                  
+                break;
+        }
+    }
+
+    private void button17_Click(object sender, EventArgs e)
+    {
+       _sshClientHandler.disconnect(sshClient);
+    }
+
+    private void button2_Click(object sender, EventArgs e)
+    {
+        _sshClientHandler.tx_txt(textBox1.Text);
+    }
+
+    private void openGenericcsvToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        OpenFunction(sender, e);
+    }
+
+    }
+
     public class DownloadStringTaskAsyncExProgress
     {
         public int ProgressPercentage { get; set; }

@@ -2,6 +2,7 @@
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using Renci.SshNet;
 
 namespace Fortibuilder.guts
 {
@@ -12,8 +13,9 @@ namespace Fortibuilder.guts
         private int _staticroutecounter =0;
         //Run once varibles
         private bool[] _options;
-        private bool runonceobjects = true, 
 
+        //todo make dynamic
+        private bool runonceobjects = true, 
         runonceobjectgroups = true,
         runonceservicegroups = true,
         runservices = true,
@@ -171,6 +173,54 @@ namespace Fortibuilder.guts
 
         }
 
+        public void WriteNetworkObject(string objectname, string ip, string smask, string objecttype, string description)
+        {
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "objects.txt");
+
+            var spacer = "    ";
+
+            File.AppendAllText(_filename, String.Format("{0}{1} \"{2}\"\r\n", spacer, "edit", objectname));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set type", objecttype));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2} {3}\r\n", spacer, "set subnet", ip, smask));
+            if (description != null)
+            {
+                File.AppendAllText(_filename,String.Format("{0}{0}{1} \"{2}\"\r\n", spacer, "set comment", description.TrimEnd(' ')));
+            }
+            File.AppendAllText(_filename, String.Format("{0}{1}\r\n", spacer, "next"));
+        }
+
+        public void WriteNetworkRangeObject(string objectname, string firstip, string lastip, string description)
+        {
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "objects.txt");
+
+            var spacer = "    ";
+
+            File.AppendAllText(_filename, String.Format("{0}{1} \"{2}\"\r\n", spacer, "edit", objectname));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set type", "iprange"));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1}{2}\r\n", spacer, "set end-ip",lastip));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1}{2}\r\n", spacer, "set start-ip",firstip));
+            if (description != null)
+            {
+                File.AppendAllText(_filename, String.Format("{0}{0}{1} \"{2}\"\r\n", spacer, "set comment", description.TrimEnd(' ')));
+            }
+            File.AppendAllText(_filename, String.Format("{0}{1}\r\n", spacer, "next"));
+        }
+
+        public void WriteHostkObject(string objectname, string ip, string description)
+        {
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "objects.txt");
+
+            var spacer = "    ";
+
+            File.AppendAllText(_filename, String.Format("{0}{1} \"{2}\"\r\n", spacer, "edit", objectname));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2} {3}\r\n", spacer, "set subnet", ip, "255.255.255.255"));
+            if (description != null) 
+            { 
+                File.AppendAllText(_filename, String.Format("{0}{0}{1} \"{2}\"\r\n", spacer, "set comment", description.TrimEnd(' ')));
+            }
+            File.AppendAllText(_filename, String.Format("{0}{1}\r\n", spacer, "next"));
+        }
+
         public void WriteNetworkObjectGroup(string[] input)
         {
             _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "object_groups.txt");
@@ -209,6 +259,32 @@ namespace Fortibuilder.guts
                 }
                 else 
                 { 
+                    objectmemberoutput += String.Format("\"{0}\" ", name);
+                }
+            }
+
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set member ", objectmemberoutput));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1}\r\n", spacer, "next"));
+        }
+
+        public void WriteNetworkObjectGroup(string objectgroupname, string[] objectmembers, string description)
+        {
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "object_groups.txt");
+
+            var spacer = "    ";
+            string objectmemberoutput = null;
+
+            File.AppendAllText(_filename, String.Format("{0}{1} \"{2}\"\r\n", spacer, "edit", objectgroupname));
+            //TODO set uuid if needed. i don't think its neccessary though.
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} \"{2}\"\r\n", spacer, "set comment ", description.TrimEnd(' ')));
+                           
+            foreach (var name in objectmembers)
+            {
+                if (name == "")
+                {
+                }
+                else
+                {
                     objectmemberoutput += String.Format("\"{0}\" ", name);
                 }
             }
@@ -302,6 +378,32 @@ namespace Fortibuilder.guts
             File.AppendAllText(_filename, String.Format("{0}{1}\r\n", spacer, "next"));
         }
 
+        public void WriteServiceObjectGroup(string servicegroupname, string[] groupmembers, string description)
+        {
+            //NOTE TO SELF. The only real thing that belongs in this is members and comments for the groups.
+            _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "service_groups.txt");
+            var spacer = "    ";
+
+            File.AppendAllText(_filename, String.Format("{0}{1} \"{2}\"\r\n", spacer, "edit", servicegroupname));
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} \"{2}\"\r\n", spacer, "set comment ", description.TrimEnd(' ')));
+
+            string groupmembers2 = null;
+
+            foreach (var groupmember in groupmembers)
+            {
+                if (groupmember == "")
+                {
+                }
+                else
+                {
+                    groupmembers2 += String.Format("\"{0}\" ", groupmember);
+                }
+            }
+
+            File.AppendAllText(_filename, String.Format("{0}{0}{1} {2}\r\n", spacer, "set member", groupmembers2.TrimEnd(' ')));
+            File.AppendAllText(_filename, String.Format("{0}{1}\r\n", spacer, "next"));
+        }
+
         public void WriteStaticRoute(string networkinterface, string route, string nexthop, int metric, int routenumber)
         {
             _filename = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "\\temp\\", "static_routes.txt");
@@ -329,6 +431,11 @@ namespace Fortibuilder.guts
                 indexme++;
             }
             File.AppendAllText(_filename, String.Format("{0}{1}", fullstring, "\r\n"));
+        }
+
+        public void WriteUrlFilter(string url, string name, SshClient sshClient)
+        {
+            
         }
     }
 }
