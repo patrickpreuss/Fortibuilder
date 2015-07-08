@@ -1,6 +1,8 @@
 # Fortibuilder
 Tools that will eventually be released to help Administrators of Fortigate Firewalls.
 
+Latest build can be downloaded here: http://www.fortibuilder.com/build/build.rar
+
 Currently will convert Cisco ASA and portions of checkpoint configuration files, along with a generic parser to make objects from any .csv file. 
 
 Still need to upload a bunch of fixes completed earlier. I would not suggest using it until then unless you know what you're doing.
